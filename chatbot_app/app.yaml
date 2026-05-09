@@ -17,6 +17,6 @@ env:
   - name: DATABRICKS_TOKEN
     value: "dapic3c19a92e913f58118665385fef60434"
   - name: ENDPOINT_NAME
-    value: "agents_isa632_7474656346303369-boopatt-job_finder"
+    value: "agents_boopatt-job_finder"
   - name: SQL_WAREHOUSE_ID
     value: "1c9c842c6ceae014"

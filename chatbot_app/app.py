@@ -15,7 +15,7 @@ ENDPOINT_NAME = os.environ.get(
     "ENDPOINT_NAME",
     "agents_isa632_7474656346303369-boopatt-job_finder"
 )
-SERVING_ENDPOINT_URL = "https://dbc-0726d26f-3749.cloud.databricks.com/serving-endpoints/agents_isa632_7474656346303369-boopatt-job_finder/invocations"
+SERVING_ENDPOINT_URL = "https://dbc-0726d26f-3749.cloud.databricks.com/serving-endpoints/agents_boopatt-job_finder/invocations"
 # SQL warehouse HTTP path for feedback storage
 SQL_WAREHOUSE_ID = os.environ.get("SQL_WAREHOUSE_ID", "1c9c842c6ceae014")
 # Fully qualified table for storing feedback
@@ -250,7 +250,7 @@ for idx, message in enumerate(st.session_state.messages):
 if not st.session_state.messages:
     st.markdown("**Try asking:**")
     suggestions = [
-        "What entry-level data engineering roles are available at Deloitte?",
+        "What New York location jobs are available at Amazon?",
         "What senior data engineer positions are available at Deloitte?",
         "Find data engineering jobs that require Python and SQL",
         "What are the salary ranges for data engineering roles at JPMorgan Chase?",
@@ -293,7 +293,7 @@ with st.sidebar:
         "matching your criteria (role, seniority, location, skills) against "
         "our curated job listings database in seconds.\n\n"
         "**Course:** ISA 632 — Miami University\n\n"
-        "**Instructor:** Jay Shan\n\n"
+        "**Instructor:** Dr. Jay Shan\n\n"
         "**Team**\n"
         "- Thenmozhi Boopathy\n"
         "- Seth Grace\n"
