@@ -53,7 +53,16 @@ st.set_page_config(
     layout="centered"
 )
 
-st.title("💼 Job Finder Assistant")
+col_title, col_clear = st.columns([8, 1])
+with col_title:
+    st.title("💼 Job Finder Assistant")
+with col_clear:
+    st.write("")
+    if st.button("🗑️ Clear", help="Clear chat history"):
+        st.session_state.messages = []
+        st.session_state.feedback_given = {}
+        st.session_state.pending_feedback = None
+        st.rerun()
 st.caption("Ask in plain English about any data engineering role — I'll search open positions from Deloitte, JPMorgan Chase, and Amazon and return structured summaries with job descriptions, qualifications, and salary ranges, or let you know clearly when no match is found.")
 
 # --- Session State ---
@@ -241,7 +250,7 @@ for idx, message in enumerate(st.session_state.messages):
 if not st.session_state.messages:
     st.markdown("**Try asking:**")
     suggestions = [
-        "Show me data engineering roles at Amazon",
+        "What entry-level data engineering roles are available at Deloitte?",
         "What senior data engineer positions are available at Deloitte?",
         "Find data engineering jobs that require Python and SQL",
         "What are the salary ranges for data engineering roles at JPMorgan Chase?",
@@ -296,9 +305,3 @@ with st.sidebar:
         "After each response, use the 👍 / 👎 buttons to rate the answer. "
         "Your feedback helps us make the bot more accurate and useful."
     )
-    st.divider()
-    if st.button("Clear Chat History"):
-        st.session_state.messages = []
-        st.session_state.feedback_given = {}
-        st.session_state.pending_feedback = None
-        st.rerun()
