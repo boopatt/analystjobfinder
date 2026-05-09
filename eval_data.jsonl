@@ -1,0 +1,12 @@
+{"inputs":{"messages":[{"content":"show me the possible visa sponsoring roles in data analyst","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":true}}
+{"inputs":{"messages":[{"content":"I am going to move in New York. I am a beginner level data analyst. I know only python. What kind of roles available for me?","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":true}}
+{"inputs":{"messages":[{"content":"what kind of managerial roles available for remote","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":true}}
+{"inputs":{"messages":[{"content":"Find jobs related to artificial intelligence with Python experience preferred","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":true}}
+{"inputs":{"messages":[{"content":"I'm graduating this spring with an MSBA. What roles fit my background?","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":true}}
+{"inputs":{"messages":[{"content":"show me the image of deloitte","role":"user"}]},"expectations":{"job_relevant":false,"filter_aware":false}}
+{"inputs":{"messages":[{"content":"What is company culture at JPMorgan Chase","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":false}}
+{"inputs":{"messages":[{"content":"show me the locations in U.S.A about JP Morgan","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":false}}
+{"inputs":{"messages":[{"content":"what is the highest level position in Deloitte","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":false}}
+{"inputs":{"messages":[{"content":"Share the salary about the managerial role in Analyst area","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":true}}
+{"inputs":{"messages":[{"content":"What is the most needed skill for beginner level","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":false}}
+{"inputs":{"messages":[{"content":"How much years of experience is needed for beginner level","role":"user"}]},"expectations":{"job_relevant":true,"filter_aware":false}}
