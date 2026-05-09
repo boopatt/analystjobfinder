@@ -12,6 +12,11 @@ command:
   - "false"
 
 env:
-  - name: SERVING_ENDPOINT_URL
-    value: "https://dbc-0726d26f-3749.cloud.databricks.com/serving-endpoints/agents_isa632_7474656346303369-boopatt-getstarted_job_listings/invocations"
-  # DATABRICKS_TOKEN is automatically injected by Databricks Apps at runtime — do not hardcode it here
+  - name: DATABRICKS_HOST
+    value: "https://dbc-0726d26f-3749.cloud.databricks.com"
+  - name: DATABRICKS_TOKEN
+    value: "dapic3c19a92e913f58118665385fef60434"
+  - name: ENDPOINT_NAME
+    value: "agents_isa632_7474656346303369-boopatt-job_finder"
+  - name: SQL_WAREHOUSE_ID
+    value: "1c9c842c6ceae014"

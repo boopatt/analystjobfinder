@@ -1,22 +1,39 @@
 import streamlit as st
 import requests
 import os
+import time
 from datetime import datetime
 
 # --- Configuration ---
-SERVING_ENDPOINT_URL = os.environ.get("SERVING_ENDPOINT_URL", "")
-DATABRICKS_TOKEN = os.environ.get("DATABRICKS_TOKEN", "")
 DATABRICKS_HOST = os.environ.get(
     "DATABRICKS_HOST",
     "https://dbc-0726d26f-3749.cloud.databricks.com"
 )
+DATABRICKS_TOKEN = os.environ.get("DATABRICKS_TOKEN", "")
+
+ENDPOINT_NAME = os.environ.get(
+    "ENDPOINT_NAME",
+    "agents_isa632_7474656346303369-boopatt-job_finder"
+)
+SERVING_ENDPOINT_URL = "https://dbc-0726d26f-3749.cloud.databricks.com/serving-endpoints/agents_isa632_7474656346303369-boopatt-job_finder/invocations"
 # SQL warehouse HTTP path for feedback storage
-SQL_WAREHOUSE_ID = os.environ.get("SQL_WAREHOUSE_ID", "")
+SQL_WAREHOUSE_ID = os.environ.get("SQL_WAREHOUSE_ID", "1c9c842c6ceae014")
 # Fully qualified table for storing feedback
 FEEDBACK_TABLE = os.environ.get(
     "FEEDBACK_TABLE",
     "isa632_7474656346303369.boopatt.chatbot_feedback"
 )
+
+# --- Startup Diagnostics ---
+print("=" * 60)
+print("APP STARTUP DIAGNOSTICS")
+print(f"  DATABRICKS_HOST: {DATABRICKS_HOST}")
+print(f"  DATABRICKS_TOKEN set: {bool(DATABRICKS_TOKEN)} (length: {len(DATABRICKS_TOKEN)})")
+print(f"  ENDPOINT_NAME: {ENDPOINT_NAME}")
+print(f"  SERVING_ENDPOINT_URL: {SERVING_ENDPOINT_URL}")
+print(f"  SQL_WAREHOUSE_ID: {SQL_WAREHOUSE_ID}")
+print(f"  FEEDBACK_TABLE: {FEEDBACK_TABLE}")
+print("=" * 60)
 
 # Feedback category options (similar to Review App)
 FEEDBACK_CATEGORIES = [
@@ -50,6 +67,7 @@ if "pending_feedback" not in st.session_state:
 
 def call_agent(user_message: str) -> str:
     """Call the agent serving endpoint and return the response text."""
+    print(f"[call_agent] Sending query: {user_message[:100]}...")
     headers = {
         "Authorization": f"Bearer {DATABRICKS_TOKEN}",
         "Content-Type": "application/json",
@@ -62,6 +80,7 @@ def call_agent(user_message: str) -> str:
 
     try:
         response = requests.post(SERVING_ENDPOINT_URL, headers=headers, json=payload, timeout=60)
+        print(f"[call_agent] Response status: {response.status_code}")
         response.raise_for_status()
         result = response.json()
 
@@ -70,20 +89,36 @@ def call_agent(user_message: str) -> str:
         if output and len(output) > 0:
             content = output[0].get("content", [])
             if content and len(content) > 0:
-                return content[0].get("text", "No response received.")
+                text = content[0].get("text", "No response received.")
+                print(f"[call_agent] Success - response length: {len(text)}")
+                return text
+        print("[call_agent] No output in response")
         return "No response received from the agent."
 
     except requests.exceptions.Timeout:
+        print("[call_agent] TIMEOUT")
         return "⏱️ The request timed out. Please try again."
     except requests.exceptions.HTTPError as e:
+        print(f"[call_agent] HTTP ERROR: {e.response.status_code} - {e.response.text[:200]}")
         return f"❌ Error: {e.response.status_code} - {e.response.text[:200]}"
     except Exception as e:
+        print(f"[call_agent] EXCEPTION: {type(e).__name__}: {str(e)}")
         return f"❌ Unexpected error: {str(e)}"
 
 
 def submit_feedback(question: str, response: str, rating: str, category: str = "", comment: str = ""):
     """Write user feedback to a Delta table via the SQL Statement Execution API."""
-    if not SQL_WAREHOUSE_ID or not DATABRICKS_TOKEN:
+    print(f"[submit_feedback] Called with rating={rating}, category={category}")
+    print(f"[submit_feedback] SQL_WAREHOUSE_ID={SQL_WAREHOUSE_ID}, TOKEN set={bool(DATABRICKS_TOKEN)}")
+
+    if not SQL_WAREHOUSE_ID:
+        print("[submit_feedback] SKIPPED - no SQL_WAREHOUSE_ID")
+        st.toast("⚠️ Feedback not saved — no SQL warehouse configured", icon="⚠️")
+        return False
+
+    if not DATABRICKS_TOKEN:
+        print("[submit_feedback] SKIPPED - no DATABRICKS_TOKEN")
+        st.toast("⚠️ Feedback not saved — no auth token available", icon="⚠️")
         return False
 
     # Escape single quotes in strings for SQL
@@ -97,6 +132,7 @@ def submit_feedback(question: str, response: str, rating: str, category: str = "
     INSERT INTO {FEEDBACK_TABLE} (timestamp, question, response, rating, category, comment)
     VALUES ('{timestamp}', '{question_escaped}', '{response_escaped}', '{rating}', '{category_escaped}', '{comment_escaped}')
     """
+    print(f"[submit_feedback] SQL: {sql[:200]}...")
 
     headers = {
         "Authorization": f"Bearer {DATABRICKS_TOKEN}",
@@ -115,8 +151,18 @@ def submit_feedback(question: str, response: str, rating: str, category: str = "
             json=payload,
             timeout=15,
         )
-        return resp.status_code == 200
-    except Exception:
+        print(f"[submit_feedback] Response status: {resp.status_code}")
+        print(f"[submit_feedback] Response body: {resp.text[:300]}")
+
+        if resp.status_code == 200:
+            st.toast("✅ Feedback saved successfully!", icon="✅")
+            return True
+        else:
+            st.toast(f"❌ Feedback failed: {resp.status_code} - {resp.text[:100]}", icon="❌")
+            return False
+    except Exception as e:
+        print(f"[submit_feedback] EXCEPTION: {type(e).__name__}: {str(e)}")
+        st.toast(f"❌ Feedback error: {str(e)[:100]}", icon="❌")
         return False
 
 
@@ -221,4 +267,3 @@ with st.sidebar:
         st.session_state.feedback_given = {}
         st.session_state.pending_feedback = None
         st.rerun()
-
