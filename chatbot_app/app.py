@@ -256,10 +256,26 @@ if prompt := st.chat_input("Ask about available jobs (e.g., 'Show me data engine
 with st.sidebar:
     st.header("About")
     st.markdown(
-        "This chatbot searches our job listings database and provides "
-        "relevant position summaries. It will let you know if your "
-        "specific criteria (seniority level, domain, etc.) don't match "
-        "available roles."
+        "**Job Finder Assistant**\n\n"
+        "A GenAI chatbot built on Databricks that helps job seekers quickly "
+        "discover relevant positions — saving hours of manual search by "
+        "matching your criteria (role, seniority, location, skills) against "
+        "our curated job listings database in seconds.\n\n"
+        "Ask in plain English and get structured summaries of matching roles, "
+        "including job descriptions, qualifications, and salary ranges — or a "
+        "clear explanation when no match exists.\n\n"
+        "**Course:** ISA 632 — Miami University\n\n"
+        "**Instructor:** Jay Shan\n\n"
+        "**Team**\n"
+        "- Thenmozhi Boopathy\n"
+        "- Seth Grace\n"
+        "- Luke Johnson"
+    )
+    st.divider()
+    st.markdown(
+        "**Help us improve!**\n\n"
+        "After each response, use the 👍 / 👎 buttons to rate the answer. "
+        "Your feedback helps us make the bot more accurate and useful."
     )
     st.divider()
     if st.button("Clear Chat History"):
