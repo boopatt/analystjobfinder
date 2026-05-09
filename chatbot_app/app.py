@@ -48,13 +48,13 @@ FEEDBACK_CATEGORIES = [
 
 # --- Page Config ---
 st.set_page_config(
-    page_title="Job Listings Chatbot",
+    page_title="Job Finder Assistant",
     page_icon="💼",
     layout="centered"
 )
 
-st.title("💼 Job Listings Assistant")
-st.caption("Ask me about available job positions — I'll search our database and provide relevant listings.")
+st.title("💼 Job Finder Assistant")
+st.caption("Ask in plain English about any data engineering role — I'll search open positions from Deloitte, JPMorgan Chase, and Amazon and return structured summaries with job descriptions, qualifications, and salary ranges, or let you know clearly when no match is found.")
 
 # --- Session State ---
 if "messages" not in st.session_state:
@@ -63,6 +63,8 @@ if "feedback_given" not in st.session_state:
     st.session_state.feedback_given = {}
 if "pending_feedback" not in st.session_state:
     st.session_state.pending_feedback = None  # Tracks which message is showing the feedback form
+if "queued_prompt" not in st.session_state:
+    st.session_state.queued_prompt = None
 
 
 def call_agent(user_message: str) -> str:
@@ -235,8 +237,28 @@ for idx, message in enumerate(st.session_state.messages):
                 rating = st.session_state.feedback_given[feedback_key]
                 st.caption(f"{'👍' if rating == 'positive' else '👎'} Feedback recorded — thank you!")
 
+# --- Suggested Prompts ---
+if not st.session_state.messages:
+    st.markdown("**Try asking:**")
+    suggestions = [
+        "Show me data engineering roles at Amazon",
+        "What senior data engineer positions are available at Deloitte?",
+        "Find data engineering jobs that require Python and SQL",
+        "What are the salary ranges for data engineering roles at JPMorgan Chase?",
+    ]
+    cols = st.columns(2)
+    for i, suggestion in enumerate(suggestions):
+        if cols[i % 2].button(suggestion, use_container_width=True):
+            st.session_state.queued_prompt = suggestion
+            st.rerun()
+
 # --- Chat Input ---
-if prompt := st.chat_input("Ask about available jobs (e.g., 'Show me data engineering roles')"):
+prompt = st.chat_input("Ask about available jobs (e.g., 'Show me data engineering roles at Amazon')")
+if not prompt and st.session_state.queued_prompt:
+    prompt = st.session_state.queued_prompt
+    st.session_state.queued_prompt = None
+
+if prompt:
     # Add user message to history and display
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
@@ -261,9 +283,6 @@ with st.sidebar:
         "discover relevant positions — saving hours of manual search by "
         "matching your criteria (role, seniority, location, skills) against "
         "our curated job listings database in seconds.\n\n"
-        "Ask in plain English and get structured summaries of matching roles, "
-        "including job descriptions, qualifications, and salary ranges — or a "
-        "clear explanation when no match exists.\n\n"
         "**Course:** ISA 632 — Miami University\n\n"
         "**Instructor:** Jay Shan\n\n"
         "**Team**\n"
