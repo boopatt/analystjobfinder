@@ -3,10 +3,7 @@ import requests
 import os
 
 # --- Configuration ---
-SERVING_ENDPOINT_URL = os.environ.get(
-    "SERVING_ENDPOINT_URL",
-    "https://dbc-0726d26f-3749.cloud.databricks.com/serving-endpoints/agents_isa632_7474656346303369-boopatt-getstarted_job_listings/invocations"
-)
+SERVING_ENDPOINT_URL = os.environ.get("SERVING_ENDPOINT_URL", "")
 DATABRICKS_TOKEN = os.environ.get("DATABRICKS_TOKEN", "")
 
 # --- Page Config ---

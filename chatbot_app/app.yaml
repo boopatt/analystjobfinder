@@ -14,5 +14,4 @@ command:
 env:
   - name: SERVING_ENDPOINT_URL
     value: "https://dbc-0726d26f-3749.cloud.databricks.com/serving-endpoints/agents_isa632_7474656346303369-boopatt-getstarted_job_listings/invocations"
-  - name: DATABRICKS_TOKEN
-    value: "dapi7a48e01e14bb72581d5bfd8c042678f8"
+  # DATABRICKS_TOKEN is automatically injected by Databricks Apps at runtime — do not hardcode it here
