@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Job Finder Assistant — ISA 632 Group Project</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #111;
+    color: #fff;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── Slide container ── */
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 80px;
+    text-align: center;
+    animation: fadeIn .4s ease;
+  }
+  .slide.active { display: flex; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+
+  /* ── Themes per speaker ── */
+  .theme-title   { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); }
+  .theme-agenda  { background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); }
+  .theme-seth    { background: linear-gradient(135deg, #0a2342 0%, #1a4a7a 100%); }
+  .theme-themno  { background: linear-gradient(135deg, #1a0a2e 0%, #4a1a7a 100%); }
+  .theme-luke    { background: linear-gradient(135deg, #0a2e1a 0%, #1a7a4a 100%); }
+  .theme-close   { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); }
+
+  /* ── Speaker badge ── */
+  .speaker-badge {
+    position: absolute;
+    top: 22px;
+    right: 32px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    opacity: .9;
+  }
+  .badge-seth   { background: #1a6eb5; color: #fff; }
+  .badge-themno { background: #7b2fa0; color: #fff; }
+  .badge-luke   { background: #1a8a4a; color: #fff; }
+
+  /* ── Slide number ── */
+  .slide-num {
+    position: absolute;
+    bottom: 18px;
+    right: 32px;
+    font-size: 12px;
+    opacity: .45;
+    letter-spacing: .05em;
+  }
+
+  /* ── Nav buttons ── */
+  .nav {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 14px;
+    z-index: 100;
+  }
+  .nav button {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.25);
+    color: #fff;
+    padding: 9px 26px;
+    border-radius: 24px;
+    cursor: pointer;
+    font-size: 14px;
+    backdrop-filter: blur(6px);
+    transition: background .2s;
+  }
+  .nav button:hover { background: rgba(255,255,255,.25); }
+
+  /* ── Progress bar ── */
+  #progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #58a6ff, #bc8cff, #3fb950);
+    transition: width .3s ease;
+    z-index: 200;
+  }
+
+  /* ── Typography ── */
+  h1 { font-size: 2.8rem; font-weight: 700; line-height: 1.15; margin-bottom: 18px; }
+  h2 { font-size: 2rem;   font-weight: 700; margin-bottom: 22px; }
+  h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 10px; }
+
+  .subtitle  { font-size: 1.15rem; opacity: .75; margin-bottom: 10px; }
+  .meta      { font-size: .95rem;  opacity: .55; margin-top: 8px; }
+  .accent    { color: #58a6ff; }
+  .accent-p  { color: #bc8cff; }
+  .accent-g  { color: #3fb950; }
+
+  /* ── Content layouts ── */
+  .cols { display: flex; gap: 36px; width: 100%; max-width: 1100px; text-align: left; }
+  .col  { flex: 1; }
+
+  .card {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 12px;
+    padding: 22px 24px;
+    margin-bottom: 16px;
+    text-align: left;
+  }
+  .card h3 { margin-bottom: 8px; }
+
+  ul { list-style: none; text-align: left; }
+  ul li { padding: 6px 0; padding-left: 20px; position: relative; font-size: .97rem; line-height: 1.5; opacity: .9; }
+  ul li::before { content: '▸'; position: absolute; left: 0; opacity: .6; }
+
+  .pill {
+    display: inline-block;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: .82rem;
+    margin: 4px;
+  }
+
+  .stat-row { display: flex; gap: 24px; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
+  .stat {
+    background: rgba(255,255,255,.08);
+    border-radius: 12px;
+    padding: 18px 28px;
+    min-width: 140px;
+  }
+  .stat-val { font-size: 2.2rem; font-weight: 700; }
+  .stat-lbl { font-size: .78rem; opacity: .6; text-transform: uppercase; letter-spacing: .07em; margin-top: 4px; }
+
+  .flow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  .flow-box {
+    background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.15);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-size: .88rem;
+    text-align: center;
+  }
+  .arrow { font-size: 1.2rem; opacity: .5; }
+
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; text-align: left; }
+  th { border-bottom: 1px solid rgba(255,255,255,.2); padding: 8px 12px; opacity: .6; font-weight: 600; font-size: .8rem; text-transform: uppercase; letter-spacing: .06em; }
+  td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.07); }
+  .pass { color: #3fb950; font-weight: 700; }
+  .warn { color: #e3b341; font-weight: 700; }
+
+  /* agenda grid */
+  .agenda-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; width: 100%; max-width: 960px; margin-top: 10px; }
+  .agenda-card {
+    border-radius: 14px;
+    padding: 26px 22px;
+    text-align: left;
+  }
+  .agenda-card.s { background: rgba(26,110,181,.25); border: 1px solid rgba(26,110,181,.4); }
+  .agenda-card.t { background: rgba(123,47,160,.25); border: 1px solid rgba(123,47,160,.4); }
+  .agenda-card.l { background: rgba(26,138,74,.25);  border: 1px solid rgba(26,138,74,.4); }
+  .agenda-card .who { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; opacity: .7; margin-bottom: 6px; }
+  .agenda-card .topic { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+
+  /* title slide extras */
+  .team-row { display: flex; gap: 18px; margin-top: 28px; flex-wrap: wrap; justify-content: center; }
+  .team-chip { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 24px; padding: 8px 20px; font-size: .9rem; }
+
+  .section-label {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .15em;
+    opacity: .5;
+    margin-bottom: 14px;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<div class="deck">
+
+  <!-- ═══ 1. TITLE ═══ -->
+  <div class="slide theme-title active">
+    <div class="section-label">ISA 632 · Miami University · Spring 2026</div>
+    <h1>💼 Job Finder Assistant</h1>
+    <p class="subtitle">A GenAI Chatbot for Data Engineering Job Search<br>Built on Databricks with RAG &amp; LangChain</p>
+    <div class="team-row">
+      <span class="team-chip">Seth Grace</span>
+      <span class="team-chip">Thenmozhi Boopathy</span>
+      <span class="team-chip">Luke Johnson</span>
+    </div>
+    <p class="meta" style="margin-top:32px;">Instructor: Dr. Jay Shan &nbsp;·&nbsp; ISA 632 Group Project</p>
+    <div class="slide-num">1 / 16</div>
+  </div>
+
+  <!-- ═══ 2. AGENDA ═══ -->
+  <div class="slide theme-agenda">
+    <h2>Agenda</h2>
+    <div class="agenda-grid">
+      <div class="agenda-card s">
+        <div class="who">Seth Grace</div>
+        <div class="topic">Project Objective &amp; Data Preparation</div>
+        <ul>
+          <li>Business problem</li>
+          <li>Dataset &amp; ingestion</li>
+          <li>Vector Search setup</li>
+        </ul>
+      </div>
+      <div class="agenda-card t">
+        <div class="who">Thenmozhi Boopathy</div>
+        <div class="topic">Agent Development &amp; Deployment</div>
+        <ul>
+          <li>RAG architecture</li>
+          <li>Prompt engineering</li>
+          <li>Model registry &amp; deployment</li>
+          <li>Streamlit chatbot app</li>
+        </ul>
+      </div>
+      <div class="agenda-card l">
+        <div class="who">Luke Johnson</div>
+        <div class="topic">Testing &amp; Evaluation</div>
+        <ul>
+          <li>Evaluation design</li>
+          <li>Custom scorers</li>
+          <li>Results &amp; findings</li>
+          <li>Recommendations</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">2 / 16</div>
+  </div>
+
+  <!-- ═══ 3. BUSINESS PROBLEM ═══ -->
+  <div class="slide theme-seth">
+    <span class="speaker-badge badge-seth">Seth Grace</span>
+    <div class="section-label">Project Objective</div>
+    <h2>The Business Problem</h2>
+    <div class="cols" style="max-width:980px;">
+      <div class="card col">
+        <h3 class="accent">The Challenge</h3>
+        <ul>
+          <li>Job seekers spend hours manually scanning postings across multiple sites</li>
+          <li>Generic search returns irrelevant results — wrong seniority, location, or skill set</li>
+          <li>No single tool lets users query in plain English and get structured, verified role summaries</li>
+        </ul>
+      </div>
+      <div class="card col">
+        <h3 class="accent">Our Solution</h3>
+        <ul>
+          <li>A conversational AI chatbot that understands natural language queries</li>
+          <li>Retrieves only from a curated, indexed database of real job postings</li>
+          <li>Returns structured summaries: title, description, qualifications, salary</li>
+          <li>Explicitly flags when no match exists — no hallucinated results</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">3 / 16</div>
+  </div>
+
+  <!-- ═══ 4. PROJECT SCOPE ═══ -->
+  <div class="slide theme-seth">
+    <span class="speaker-badge badge-seth">Seth Grace</span>
+    <div class="section-label">Project Objective</div>
+    <h2>Scope &amp; Dataset</h2>
+    <div class="cols" style="max-width:960px; align-items:flex-start;">
+      <div class="col">
+        <div class="card">
+          <h3 class="accent">Target Domain</h3>
+          <ul>
+            <li>Data engineering &amp; data analyst roles</li>
+            <li>Postings from <strong>Deloitte</strong>, <strong>JPMorgan Chase</strong>, and <strong>Amazon</strong></li>
+            <li>~30 real job listing PDFs covering mid-to-senior level positions</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="accent">Project Deliverables</h3>
+          <ul>
+            <li>Functional RAG-based chatbot prototype</li>
+            <li>MLflow evaluation with custom scorers</li>
+            <li>Deployed Streamlit app on Databricks</li>
+            <li>Technical documentation &amp; notebooks</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <h3 class="accent">Key Design Principle</h3>
+          <p style="font-size:.95rem; opacity:.85; line-height:1.7; margin-top:8px;">
+            A generic LLM alone is not enough. The model must be connected to
+            <strong>relevant, current data</strong> through RAG — and its responses must be
+            <strong>evaluated, not assumed</strong> to be correct.
+          </p>
+          <p style="font-size:.85rem; opacity:.6; margin-top:12px; font-style:italic;">
+            — ISA 632 Project Brief, Spring 2026
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">4 / 16</div>
+  </div>
+
+  <!-- ═══ 5. DATA PREPARATION ═══ -->
+  <div class="slide theme-seth">
+    <span class="speaker-badge badge-seth">Seth Grace</span>
+    <div class="section-label">Data Preparation · Notebook 01</div>
+    <h2>Building the Knowledge Base</h2>
+    <div class="flow" style="margin-bottom:24px;">
+      <div class="flow-box">📄 Raw Job PDFs<br><small style="opacity:.6">Unity Catalog Volume</small></div>
+      <span class="arrow">→</span>
+      <div class="flow-box">🔍 ai_parse_document()<br><small style="opacity:.6">Extract structured JSON</small></div>
+      <span class="arrow">→</span>
+      <div class="flow-box">🗃️ Delta Table<br><small style="opacity:.6">jobs_knowledge_base</small></div>
+      <span class="arrow">→</span>
+      <div class="flow-box">🔎 Vector Search Index<br><small style="opacity:.6">Semantic retrieval</small></div>
+    </div>
+    <div class="cols" style="max-width:960px;">
+      <div class="card col">
+        <h3 class="accent">Key Steps</h3>
+        <ul>
+          <li>Parse PDFs using Databricks' <code>ai_parse_document()</code> — no custom parsing code needed</li>
+          <li>Flatten document elements into plain text rows</li>
+          <li>Write to Delta table with <strong>Change Data Feed enabled</strong> — required for Vector Search sync</li>
+          <li>Sync and verify the Vector Search index with a sample similarity query</li>
+        </ul>
+      </div>
+      <div class="card col">
+        <h3 class="accent">Why Vector Search?</h3>
+        <ul>
+          <li>Semantic similarity search — finds relevant roles even without exact keyword matches</li>
+          <li>Automatically updates when the Delta table changes</li>
+          <li>Natively integrated with Databricks LangChain tools</li>
+          <li>No separate embedding infrastructure to manage</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">5 / 16</div>
+  </div>
+
+  <!-- ═══ 6. ARCHITECTURE ═══ -->
+  <div class="slide theme-themno">
+    <span class="speaker-badge badge-themno">Thenmozhi Boopathy</span>
+    <div class="section-label">System Architecture</div>
+    <h2>End-to-End Architecture</h2>
+    <div class="flow" style="flex-direction:column; gap:8px; margin-bottom: 20px;">
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center;">
+        <div class="flow-box">User Query<br><small style="opacity:.6">Streamlit UI</small></div>
+        <span class="arrow">→</span>
+        <div class="flow-box">Model Serving Endpoint<br><small style="opacity:.6">Databricks</small></div>
+        <span class="arrow">→</span>
+        <div class="flow-box">LangChain Agent<br><small style="opacity:.6">agent.py</small></div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center;">
+        <div class="flow-box">Vector Search Retriever<br><small style="opacity:.6">jobindex</small></div>
+        <span class="arrow">→</span>
+        <div class="flow-box">Llama 4 Maverick<br><small style="opacity:.6">LLM with system prompt</small></div>
+        <span class="arrow">→</span>
+        <div class="flow-box">Structured Response<br><small style="opacity:.6">+ feedback collection</small></div>
+      </div>
+    </div>
+    <div class="cols" style="max-width:900px;">
+      <div class="card col">
+        <h3 class="accent-p">Core Components</h3>
+        <ul>
+          <li><strong>LLM:</strong> Databricks Llama 4 Maverick</li>
+          <li><strong>Retriever:</strong> VectorSearchRetrieverTool</li>
+          <li><strong>Agent type:</strong> LangChain tool-calling agent</li>
+          <li><strong>Wrapper:</strong> MLflow ResponsesAgent (Databricks-compatible)</li>
+        </ul>
+      </div>
+      <div class="card col">
+        <h3 class="accent-p">Why RAG over Fine-Tuning?</h3>
+        <ul>
+          <li>Job listings change frequently — RAG retrieves live facts</li>
+          <li>Fine-tuning encodes static knowledge into weights</li>
+          <li>RAG is transparent: every answer traces to a real document</li>
+          <li>No retraining needed when new postings are added</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">6 / 16</div>
+  </div>
+
+  <!-- ═══ 7. PROMPT ENGINEERING ═══ -->
+  <div class="slide theme-themno">
+    <span class="speaker-badge badge-themno">Thenmozhi Boopathy</span>
+    <div class="section-label">Agent Development · Notebook 02</div>
+    <h2>Prompt Engineering Journey</h2>
+    <div class="cols" style="max-width:1000px; align-items:flex-start;">
+      <div class="col">
+        <div class="card" style="border-color:rgba(255,80,80,.3);">
+          <h3 style="color:#ff6b6b;">❌ Original Prompt Failures</h3>
+          <ul>
+            <li>Hallucinated search keywords not in the user's query</li>
+            <li>Tool name mismatch — agent called a tool that didn't exist</li>
+            <li>Returned wrong seniority levels without flagging the mismatch</li>
+            <li>Presented irrelevant results as if they were correct matches</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="border-color:rgba(63,185,80,.3);">
+          <h3 style="color:#3fb950;">✅ Five Improved Rules</h3>
+          <ul>
+            <li><strong>Rule 1:</strong> Always call the retriever tool before responding</li>
+            <li><strong>Rule 2:</strong> Use the user's exact words as the search query</li>
+            <li><strong>Rule 3:</strong> Base response only on retrieved documents</li>
+            <li><strong>Rule 4:</strong> Verify results match seniority, function &amp; location</li>
+            <li><strong>Rule 5:</strong> Use MISMATCH FORMAT when results don't fit</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">7 / 16</div>
+  </div>
+
+  <!-- ═══ 8. MISMATCH FORMAT ═══ -->
+  <div class="slide theme-themno">
+    <span class="speaker-badge badge-themno">Thenmozhi Boopathy</span>
+    <div class="section-label">Agent Development · Notebook 02</div>
+    <h2>Structured Output Formats</h2>
+    <div class="cols" style="max-width:980px; align-items:flex-start;">
+      <div class="card col">
+        <h3 class="accent-p">✅ Match Format</h3>
+        <p style="font-size:.88rem; opacity:.7; margin:8px 0 12px;">When retrieved results match the user's criteria:</p>
+        <div style="background:rgba(0,0,0,.3); border-radius:8px; padding:14px; font-size:.85rem; font-family:monospace; line-height:1.7; opacity:.9;">
+          <strong>Title:</strong> Senior Data Engineer<br>
+          <strong>Company:</strong> Deloitte<br>
+          <strong>Job Description:</strong> &lt;250-word factual summary&gt;<br>
+          <strong>Qualifications:</strong> 5+ years, Python, Spark…<br>
+          <strong>Salary:</strong> $120,000 – $150,000
+        </div>
+      </div>
+      <div class="card col">
+        <h3 style="color:#e3b341;">⚠️ Mismatch Format</h3>
+        <p style="font-size:.88rem; opacity:.7; margin:8px 0 12px;">When no matching listings exist for the user's criteria:</p>
+        <div style="background:rgba(0,0,0,.3); border-radius:8px; padding:14px; font-size:.85rem; font-family:monospace; line-height:1.7; opacity:.9;">
+          I was unable to find any <em>[user criteria]</em> roles.<br><br>
+          Here is what is currently available:<br>
+          <strong>Title:</strong> &lt;actual title&gt;<br>
+          <strong>Level:</strong> &lt;actual level&gt;<br>
+          <strong>Brief Summary:</strong> &lt;2-3 sentences&gt;
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.88rem; opacity:.6; margin-top:18px;">Honest mismatch reporting prevents the agent from presenting wrong results as correct answers.</p>
+    <div class="slide-num">8 / 16</div>
+  </div>
+
+  <!-- ═══ 9. MODEL REGISTRY & DEPLOYMENT ═══ -->
+  <div class="slide theme-themno">
+    <span class="speaker-badge badge-themno">Thenmozhi Boopathy</span>
+    <div class="section-label">Deployment · Notebook 04</div>
+    <h2>Model Registry &amp; Deployment</h2>
+    <div class="cols" style="max-width:960px; align-items:flex-start;">
+      <div class="col">
+        <div class="card">
+          <h3 class="accent-p">MLflow Model Registry</h3>
+          <ul>
+            <li>Agent logged and registered to Unity Catalog</li>
+            <li>Version-pinned for reproducible evaluation runs</li>
+            <li>Vector Search index declared as a resource dependency</li>
+            <li>Deployed via <code>agents.deploy()</code> with <code>scale_to_zero=True</code></li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="accent-p">Feedback Collection</h3>
+          <ul>
+            <li>👍 / 👎 rating on every assistant response</li>
+            <li>Optional category (7 types) + free-text comment</li>
+            <li>Written to <code>chatbot_feedback</code> Delta table via SQL API</li>
+            <li>Provides labeled data for future improvements</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <h3 class="accent-p">Streamlit Chatbot App</h3>
+          <ul>
+            <li>Deployed to Databricks Apps — no separate server needed</li>
+            <li>Suggested prompts guide users on first load</li>
+            <li>Chat history preserved within session</li>
+            <li>Accessible to workspace users with View permission</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="accent-p">Infrastructure</h3>
+          <ul>
+            <li><strong>Catalog:</strong> isa632_7474656346303369</li>
+            <li><strong>Schema:</strong> boopatt</li>
+            <li><strong>Endpoint:</strong> agents_…-boopatt-job_finder</li>
+            <li><strong>LLM:</strong> Databricks Llama 4 Maverick</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">9 / 16</div>
+  </div>
+
+  <!-- ═══ 10. EVALUATION DESIGN ═══ -->
+  <div class="slide theme-luke">
+    <span class="speaker-badge badge-luke">Luke Johnson</span>
+    <div class="section-label">Evaluation · Notebook 03</div>
+    <h2>Evaluation Design</h2>
+    <div class="cols" style="max-width:980px; align-items:flex-start;">
+      <div class="col">
+        <div class="card">
+          <h3 class="accent-g">12 Realistic Test Questions</h3>
+          <ul>
+            <li>Role-specific searches (visa sponsorship, remote, managerial)</li>
+            <li>Multi-criteria filtering (location + level + skill)</li>
+            <li>Salary and experience-level questions</li>
+            <li>Out-of-scope requests (images, company culture)</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="accent-g">MLflow Evaluation Framework</h3>
+          <ul>
+            <li><code>mlflow.genai.evaluate()</code> with MLflow 3.0</li>
+            <li>LLM-as-judge scoring via <code>Guidelines</code> scorer API</li>
+            <li>All results logged to the <strong>JobFinder_Eval</strong> experiment</li>
+            <li>Per-question trace logged for full transparency</li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <h3 class="accent-g">Four Scorers</h3>
+          <ul>
+            <li><strong>job_relevant</strong> — response grounded in real postings?</li>
+            <li><strong>filter_aware</strong> — user-specified filters acknowledged?</li>
+            <li><strong>RelevanceToQuery</strong> — built-in MLflow scorer</li>
+            <li><strong>Safety</strong> — built-in MLflow scorer</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="accent-g">Why Custom Scorers?</h3>
+          <ul>
+            <li>Generic scorers can't evaluate domain-specific failures</li>
+            <li><em>job_relevant</em> catches hallucination specific to job search</li>
+            <li><em>filter_aware</em> catches the silent-filter-ignore failure we saw in testing</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">10 / 16</div>
+  </div>
+
+  <!-- ═══ 11. RESULTS ═══ -->
+  <div class="slide theme-luke">
+    <span class="speaker-badge badge-luke">Luke Johnson</span>
+    <div class="section-label">Evaluation · Results</div>
+    <h2>Evaluation Results</h2>
+    <div class="stat-row" style="margin-bottom:28px;">
+      <div class="stat"><div class="stat-val pass">100%</div><div class="stat-lbl">Safety</div></div>
+      <div class="stat"><div class="stat-val pass">92%</div><div class="stat-lbl">Job Relevant</div></div>
+      <div class="stat"><div class="stat-val pass">92%</div><div class="stat-lbl">Relevance to Query</div></div>
+      <div class="stat"><div class="stat-val warn">58%</div><div class="stat-lbl">Filter Aware</div></div>
+    </div>
+    <div class="cols" style="max-width:960px;">
+      <div class="card col">
+        <h3 class="accent-g">Strengths</h3>
+        <ul>
+          <li>Safe across all 12 query types — no harmful content</li>
+          <li>Factual lookups (salary, locations, culture) scored 100%</li>
+          <li>MISMATCH FORMAT prevented wrong answers from being presented as correct</li>
+          <li>Out-of-scope queries handled gracefully</li>
+        </ul>
+      </div>
+      <div class="card col">
+        <h3 style="color:#e3b341;">Main Bottleneck — Filter Aware 58%</h3>
+        <ul>
+          <li>5 of 12 questions failed on filter constraints</li>
+          <li>No entry-level or beginner-level postings in the database</li>
+          <li>Multi-criteria filtering (location + level + skill) not supported by pure semantic search</li>
+          <li>Root cause: <strong>data gap</strong>, not a model failure</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">11 / 16</div>
+  </div>
+
+  <!-- ═══ 12. QUESTION BREAKDOWN ═══ -->
+  <div class="slide theme-luke">
+    <span class="speaker-badge badge-luke">Luke Johnson</span>
+    <div class="section-label">Evaluation · Per-Question Analysis</div>
+    <h2>Selected Question Results</h2>
+    <div style="width:100%; max-width:900px; overflow:auto;">
+      <table>
+        <thead>
+          <tr><th>#</th><th>Question</th><th>Job Relevant</th><th>Filter Aware</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Q1</td><td>Visa sponsoring roles — data analyst</td><td class="pass">✓ Pass</td><td class="pass">✓ Pass</td></tr>
+          <tr><td>Q2</td><td>Beginner DA in New York, Python only</td><td class="pass">✓ Pass</td><td class="warn">✗ Fail</td></tr>
+          <tr><td>Q3</td><td>Remote managerial roles</td><td class="pass">✓ Pass</td><td class="pass">✓ Pass</td></tr>
+          <tr><td>Q6</td><td>Show me an image of Deloitte</td><td class="pass">✓ Pass</td><td class="pass">✓ Pass</td></tr>
+          <tr><td>Q10</td><td>Salary for managerial analyst roles</td><td class="pass">✓ Pass</td><td class="pass">✓ Pass</td></tr>
+          <tr><td>Q11</td><td>Most needed skill for beginner level</td><td class="warn">✗ Fail</td><td class="warn">✗ Fail</td></tr>
+          <tr><td>Q12</td><td>Years of experience for beginner</td><td class="pass">✓ Pass</td><td class="warn">✗ Fail</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:.85rem; opacity:.55; margin-top:14px;">All 5 filter-aware failures share the same root cause: no junior/entry-level postings exist in the database.</p>
+    <div class="slide-num">12 / 16</div>
+  </div>
+
+  <!-- ═══ 13. WHY NOT FINE-TUNE ═══ -->
+  <div class="slide theme-luke">
+    <span class="speaker-badge badge-luke">Luke Johnson</span>
+    <div class="section-label">Evaluation · Key Decision</div>
+    <h2>Why We Did Not Fine-Tune</h2>
+    <div class="cols" style="max-width:960px; align-items:flex-start;">
+      <div class="card col" style="border-color:rgba(255,80,80,.3);">
+        <h3 style="color:#ff6b6b;">Fine-Tuning Would Not Help</h3>
+        <ul>
+          <li>Fine-tuning changes <em>how</em> a model responds — not <em>what</em> it knows</li>
+          <li>Our problem was a data gap: missing job listings, not wrong behavior</li>
+          <li>Job postings change frequently — static weights become stale immediately</li>
+          <li>30 PDFs is far too small for meaningful fine-tuning</li>
+          <li>Llama 4 Maverick would require significant GPU resources to retrain</li>
+        </ul>
+      </div>
+      <div class="card col" style="border-color:rgba(63,185,80,.3);">
+        <h3 class="accent-g">The Right Fixes</h3>
+        <ul>
+          <li><strong>Expand the dataset</strong> — add entry-level &amp; junior job listings</li>
+          <li><strong>Add metadata fields</strong> — seniority, location, required skills</li>
+          <li><strong>Hybrid search</strong> — combine semantic similarity with structured filters</li>
+          <li><strong>Increase max_tokens</strong> — from 500 to 1000+ to prevent truncation</li>
+        </ul>
+        <p style="font-size:.83rem; opacity:.65; margin-top:14px; font-style:italic;">
+          Evaluation told us exactly what was wrong and why — that is evaluation working correctly.
+        </p>
+      </div>
+    </div>
+    <div class="slide-num">13 / 16</div>
+  </div>
+
+  <!-- ═══ 14. DEMO ═══ -->
+  <div class="slide theme-themno">
+    <span class="speaker-badge badge-themno">Thenmozhi Boopathy</span>
+    <div class="section-label">Live Demo</div>
+    <h2>Job Finder Assistant — Live Demo</h2>
+    <div class="cols" style="max-width:900px;">
+      <div class="card col">
+        <h3 class="accent-p">Try These Queries</h3>
+        <ul>
+          <li>"Show me senior data engineering roles at Deloitte"</li>
+          <li>"What are the salary ranges at JPMorgan Chase for data engineers?"</li>
+          <li>"Find roles that require Python and SQL"</li>
+          <li>"What entry-level positions are available?" <span style="opacity:.5; font-size:.8rem;">(mismatch demo)</span></li>
+        </ul>
+      </div>
+      <div class="card col">
+        <h3 class="accent-p">What to Notice</h3>
+        <ul>
+          <li>Agent always retrieves from the index — no fabricated answers</li>
+          <li>Structured output: title, description, qualifications, salary</li>
+          <li>MISMATCH format when criteria can't be met</li>
+          <li>Feedback buttons on every response</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">14 / 16</div>
+  </div>
+
+  <!-- ═══ 15. LESSONS LEARNED ═══ -->
+  <div class="slide theme-agenda">
+    <div class="section-label">Reflections</div>
+    <h2>Key Lessons Learned</h2>
+    <div class="cols" style="max-width:1000px;">
+      <div class="card col">
+        <h3 class="accent">Technical</h3>
+        <ul>
+          <li>RAG grounding is more important than model size for factual accuracy</li>
+          <li>Prompt engineering has a higher ROI than fine-tuning for structured tasks</li>
+          <li>Evaluation must be domain-specific — generic scorers miss real failure modes</li>
+          <li>Honest mismatch reporting builds more user trust than confident wrong answers</li>
+        </ul>
+      </div>
+      <div class="card col">
+        <h3 class="accent">Process</h3>
+        <ul>
+          <li>Start with a small, well-scoped dataset before scaling up</li>
+          <li>Test with realistic queries from the actual use case, not toy examples</li>
+          <li>Evaluation results should drive scope decisions, not just confirm success</li>
+          <li>Feedback collection from users is the best source of future training data</li>
+        </ul>
+      </div>
+    </div>
+    <div class="slide-num">15 / 16</div>
+  </div>
+
+  <!-- ═══ 16. THANK YOU ═══ -->
+  <div class="slide theme-title">
+    <div class="section-label">ISA 632 · Miami University · Spring 2026</div>
+    <h1 style="font-size:2.4rem;">Thank You</h1>
+    <p class="subtitle" style="margin-top:8px;">Questions &amp; Discussion</p>
+    <div class="team-row" style="margin-top:32px;">
+      <span class="team-chip" style="background:rgba(26,110,181,.3); border-color:rgba(26,110,181,.5);">Seth Grace</span>
+      <span class="team-chip" style="background:rgba(123,47,160,.3); border-color:rgba(123,47,160,.5);">Thenmozhi Boopathy</span>
+      <span class="team-chip" style="background:rgba(26,138,74,.3);  border-color:rgba(26,138,74,.5);">Luke Johnson</span>
+    </div>
+    <div class="cols" style="max-width:800px; margin-top:36px;">
+      <div class="card col" style="text-align:center;">
+        <div style="font-size:.8rem; opacity:.5; text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px;">Stack</div>
+        <div>
+          <span class="pill">Databricks</span>
+          <span class="pill">LangChain</span>
+          <span class="pill">MLflow</span>
+          <span class="pill">Llama 4 Maverick</span>
+          <span class="pill">Vector Search</span>
+          <span class="pill">Streamlit</span>
+        </div>
+      </div>
+    </div>
+    <p class="meta" style="margin-top:24px;">Instructor: Dr. Jay Shan &nbsp;·&nbsp; ISA 632 Group Project &nbsp;·&nbsp; Spring 2026</p>
+    <div class="slide-num">16 / 16</div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- ── Navigation ── -->
+<div class="nav">
+  <button onclick="move(-1)">← Prev</button>
+  <button onclick="move(1)">Next →</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total  = slides.length;
+  let cur = 0;
+
+  function show(n) {
+    slides[cur].classList.remove('active');
+    cur = (n + total) % total;
+    slides[cur].classList.add('active');
+    document.getElementById('progress').style.width = ((cur + 1) / total * 100) + '%';
+  }
+
+  function move(dir) { show(cur + dir); }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') move(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    move(-1);
+  });
+
+  // Init progress bar
+  document.getElementById('progress').style.width = (1 / total * 100) + '%';
+</script>
+
+</body>
+</html>
