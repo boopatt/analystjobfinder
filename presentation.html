@@ -33,13 +33,39 @@
 
   @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
 
-  /* ── Themes per speaker ── */
-  .theme-title   { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #0f3460 100%); }
-  .theme-agenda  { background: linear-gradient(135deg, #0d1117 0%, #161b22 100%); }
-  .theme-seth    { background: linear-gradient(135deg, #0a2342 0%, #1a4a7a 100%); }
-  .theme-themno  { background: linear-gradient(135deg, #1a0a2e 0%, #4a1a7a 100%); }
-  .theme-luke    { background: linear-gradient(135deg, #0a2e1a 0%, #1a7a4a 100%); }
-  .theme-close   { background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%); }
+  /* ── Themes per speaker — Miami University palette ── */
+  .theme-title   { background: linear-gradient(135deg, #1a0005 0%, #3d0010 60%, #6b0018 100%); }
+  .theme-agenda  { background: linear-gradient(135deg, #0d0002 0%, #1a0005 100%); }
+  .theme-seth    { background: #ffffff; color: #1a1a1a; }
+  .theme-themno  { background: linear-gradient(135deg, #110003 0%, #2e000d 100%); }
+  .theme-luke    { background: #fff5f6; color: #1a1a1a; }
+  .theme-close   { background: linear-gradient(135deg, #1a0005 0%, #3d0010 100%); }
+
+  /* ── Seth — white bg overrides ── */
+  .theme-seth h2, .theme-seth h3 { color: #1a1a1a; }
+  .theme-seth .section-label { color: #c3142d; opacity: 1; }
+  .theme-seth .slide-num { color: #aaa; opacity: 1; }
+  .theme-seth .card { background: #fff0f2; border-color: rgba(195,20,45,.25); }
+  .theme-seth .card h3, .theme-seth .accent { color: #c3142d; }
+  .theme-seth ul li { color: #333; opacity: 1; }
+  .theme-seth ul li::before { color: #c3142d; opacity: 1; }
+  .theme-seth .flow-box { background: #fff0f2; border-color: rgba(195,20,45,.3); color: #1a1a1a; }
+  .theme-seth .arrow { color: #c3142d; opacity: .7; }
+
+  /* ── Luke — white bg overrides ── */
+  .theme-luke h2, .theme-luke h3 { color: #1a1a1a; }
+  .theme-luke .section-label { color: #c3142d; opacity: 1; }
+  .theme-luke .slide-num { color: #aaa; opacity: 1; }
+  .theme-luke .card { background: #fff0f2; border-color: rgba(195,20,45,.25); }
+  .theme-luke .card h3, .theme-luke .accent-g { color: #c3142d; }
+  .theme-luke ul li { color: #333; opacity: 1; }
+  .theme-luke ul li::before { color: #c3142d; opacity: 1; }
+  .theme-luke .stat { background: #fff0f2; border: 1px solid rgba(195,20,45,.2); }
+  .theme-luke .stat-lbl { color: #888; opacity: 1; }
+  .theme-luke table th { color: #666; opacity: 1; border-bottom-color: rgba(195,20,45,.3); }
+  .theme-luke table td { color: #333; border-bottom-color: rgba(195,20,45,.12); }
+  .theme-luke .flow-box { background: #fff0f2; border-color: rgba(195,20,45,.3); color: #1a1a1a; }
+  .theme-luke .arrow { color: #c3142d; opacity: .7; }
 
   /* ── Speaker badge ── */
   .speaker-badge {
@@ -54,9 +80,9 @@
     border-radius: 20px;
     opacity: .9;
   }
-  .badge-seth   { background: #1a6eb5; color: #fff; }
-  .badge-themno { background: #7b2fa0; color: #fff; }
-  .badge-luke   { background: #1a8a4a; color: #fff; }
+  .badge-seth   { background: #c3142d; color: #fff; }
+  .badge-themno { background: #8b0015; color: #fff; }
+  .badge-luke   { background: #e8405a; color: #fff; }
 
   /* ── Slide number ── */
   .slide-num {
@@ -79,24 +105,23 @@
     z-index: 100;
   }
   .nav button {
-    background: rgba(255,255,255,.12);
-    border: 1px solid rgba(255,255,255,.25);
+    background: rgba(195,20,45,.85);
+    border: 1px solid rgba(195,20,45,1);
     color: #fff;
     padding: 9px 26px;
     border-radius: 24px;
     cursor: pointer;
     font-size: 14px;
-    backdrop-filter: blur(6px);
     transition: background .2s;
   }
-  .nav button:hover { background: rgba(255,255,255,.25); }
+  .nav button:hover { background: rgba(139,0,21,1); }
 
   /* ── Progress bar ── */
   #progress {
     position: fixed;
     top: 0; left: 0;
     height: 3px;
-    background: linear-gradient(90deg, #58a6ff, #bc8cff, #3fb950);
+    background: linear-gradient(90deg, #c3142d, #ff6b7a, #c3142d);
     transition: width .3s ease;
     z-index: 200;
   }
@@ -108,9 +133,9 @@
 
   .subtitle  { font-size: 1.15rem; opacity: .75; margin-bottom: 10px; }
   .meta      { font-size: .95rem;  opacity: .55; margin-top: 8px; }
-  .accent    { color: #58a6ff; }
-  .accent-p  { color: #bc8cff; }
-  .accent-g  { color: #3fb950; }
+  .accent    { color: #ff8096; }
+  .accent-p  { color: #ffaab5; }
+  .accent-g  { color: #ff6b7a; }
 
   /* ── Content layouts ── */
   .cols { display: flex; gap: 36px; width: 100%; max-width: 1100px; text-align: left; }
@@ -181,9 +206,19 @@
     padding: 26px 22px;
     text-align: left;
   }
-  .agenda-card.s { background: rgba(26,110,181,.25); border: 1px solid rgba(26,110,181,.4); }
-  .agenda-card.t { background: rgba(123,47,160,.25); border: 1px solid rgba(123,47,160,.4); }
-  .agenda-card.l { background: rgba(26,138,74,.25);  border: 1px solid rgba(26,138,74,.4); }
+  .agenda-card.s { background: #ffffff; border: 1px solid rgba(195,20,45,.4); }
+  .agenda-card.s .who { color: #c3142d; opacity: 1; }
+  .agenda-card.s .topic { color: #1a1a1a; }
+  .agenda-card.s ul li { color: #333; opacity: 1; }
+  .agenda-card.s ul li::before { color: #c3142d; opacity: 1; }
+
+  .agenda-card.t { background: rgba(139,0,21,.2);   border: 1px solid rgba(139,0,21,.45); }
+
+  .agenda-card.l { background: #ffffff; border: 1px solid rgba(195,20,45,.4); }
+  .agenda-card.l .who { color: #8b0015; opacity: 1; }
+  .agenda-card.l .topic { color: #1a1a1a; }
+  .agenda-card.l ul li { color: #333; opacity: 1; }
+  .agenda-card.l ul li::before { color: #8b0015; opacity: 1; }
   .agenda-card .who { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; opacity: .7; margin-bottom: 6px; }
   .agenda-card .topic { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
 
@@ -213,9 +248,9 @@
     <h1>💼 Job Finder Assistant</h1>
     <p class="subtitle">A GenAI Chatbot for Data Engineering Job Search<br>Built on Databricks with RAG &amp; LangChain</p>
     <div class="team-row">
-      <span class="team-chip">Seth Grace</span>
-      <span class="team-chip">Thenmozhi Boopathy</span>
-      <span class="team-chip">Luke Johnson</span>
+      <span class="team-chip" style="background:rgba(195,20,45,.25);border-color:rgba(195,20,45,.5);">Seth Grace</span>
+      <span class="team-chip" style="background:rgba(139,0,21,.25);border-color:rgba(139,0,21,.5);">Thenmozhi Boopathy</span>
+      <span class="team-chip" style="background:rgba(232,64,90,.25);border-color:rgba(232,64,90,.5);">Luke Johnson</span>
     </div>
     <p class="meta" style="margin-top:32px;">Instructor: Dr. Jay Shan &nbsp;·&nbsp; ISA 632 Group Project</p>
     <div class="slide-num">1 / 16</div>
@@ -297,7 +332,7 @@
           <ul>
             <li>Data engineering &amp; data analyst roles</li>
             <li>Postings from <strong>Deloitte</strong>, <strong>JPMorgan Chase</strong>, and <strong>Amazon</strong></li>
-            <li>~30 real job listing PDFs covering mid-to-senior level positions</li>
+            <li>~35 real job listing PDFs covering mid-to-senior level positions</li>
           </ul>
         </div>
         <div class="card">
@@ -369,39 +404,55 @@
     <span class="speaker-badge badge-themno">Thenmozhi Boopathy</span>
     <div class="section-label">System Architecture</div>
     <h2>End-to-End Architecture</h2>
-    <div class="flow" style="flex-direction:column; gap:8px; margin-bottom: 20px;">
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center;">
-        <div class="flow-box">User Query<br><small style="opacity:.6">Streamlit UI</small></div>
+
+    <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:16px; width:100%; max-width:1000px;">
+
+      <!-- Query path -->
+      <div style="display:flex; align-items:center; gap:6px; justify-content:center; flex-wrap:wrap;">
+        <div style="font-size:.7rem;opacity:.45;text-transform:uppercase;letter-spacing:.1em;width:60px;text-align:right;">Query</div>
+        <div class="flow-box">Streamlit UI<br><small style="opacity:.6">User query</small></div>
         <span class="arrow">→</span>
         <div class="flow-box">Model Serving Endpoint<br><small style="opacity:.6">Databricks</small></div>
         <span class="arrow">→</span>
-        <div class="flow-box">LangChain Agent<br><small style="opacity:.6">agent.py</small></div>
-      </div>
-      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; justify-content:center;">
-        <div class="flow-box">Vector Search Retriever<br><small style="opacity:.6">jobindex</small></div>
+        <div class="flow-box" style="border-color:rgba(255,160,170,.35);">1 LangChain Agent<br><small style="opacity:.6">agent.py</small></div>
         <span class="arrow">→</span>
-        <div class="flow-box">Llama 4 Maverick<br><small style="opacity:.6">LLM with system prompt</small></div>
+        <div class="flow-box" style="border-color:rgba(255,160,170,.35);">1 Tool: jobindex<br><small style="opacity:.6">VectorSearchRetrieverTool</small></div>
         <span class="arrow">→</span>
-        <div class="flow-box">Structured Response<br><small style="opacity:.6">+ feedback collection</small></div>
+        <div class="flow-box">Llama 4 Maverick<br><small style="opacity:.6">LLM + routing prompt</small></div>
+        <span class="arrow">→</span>
+        <div class="flow-box">Response<br><small style="opacity:.6">to Streamlit</small></div>
       </div>
+
+      <!-- Feedback path -->
+      <div style="display:flex; align-items:center; gap:6px; justify-content:center; flex-wrap:wrap;">
+        <div style="font-size:.7rem;opacity:.45;text-transform:uppercase;letter-spacing:.1em;width:60px;text-align:right;">Feedback</div>
+        <div class="flow-box">👍 / 👎 Rating<br><small style="opacity:.6">Streamlit UI</small></div>
+        <span class="arrow">→</span>
+        <div class="flow-box">SQL Statement API<br><small style="opacity:.6">Databricks</small></div>
+        <span class="arrow">→</span>
+        <div class="flow-box">chatbot_feedback<br><small style="opacity:.6">Separate Delta table</small></div>
+      </div>
+
     </div>
-    <div class="cols" style="max-width:900px;">
+
+    <div class="cols" style="max-width:1000px;">
       <div class="card col">
-        <h3 class="accent-p">Core Components</h3>
+        <h3 class="accent-p">Single Agent · Single Tool</h3>
         <ul>
-          <li><strong>LLM:</strong> Databricks Llama 4 Maverick</li>
-          <li><strong>Retriever:</strong> VectorSearchRetrieverTool</li>
-          <li><strong>Agent type:</strong> LangChain tool-calling agent</li>
-          <li><strong>Wrapper:</strong> MLflow ResponsesAgent (Databricks-compatible)</li>
+          <li><strong>1 agent</strong> (LangChain tool-calling) handles all user queries</li>
+          <li><strong>1 tool</strong> — the jobindex VectorSearchRetrieverTool — is the only data source</li>
+          <li>Feedback is written directly from the Streamlit app to a separate Delta table via the SQL Statement Execution API — the agent is not involved</li>
+          <li>Simple, auditable, and easy to extend</li>
         </ul>
       </div>
       <div class="card col">
-        <h3 class="accent-p">Why RAG over Fine-Tuning?</h3>
+        <h3 class="accent-p">Why Not Multi-Agent or MCP?</h3>
         <ul>
-          <li>Job listings change frequently — RAG retrieves live facts</li>
-          <li>Fine-tuning encodes static knowledge into weights</li>
-          <li>RAG is transparent: every answer traces to a real document</li>
-          <li>No retraining needed when new postings are added</li>
+          <li>Our goal is narrowly scoped: retrieve current job knowledge from one indexed source</li>
+          <li>A single retriever tool is sufficient — no orchestration layer needed</li>
+          <li>Multi-agent adds coordination overhead with no benefit for this use case</li>
+          <li>MCP is designed for integrating external tools and services — unnecessary here</li>
+          <li>Keeping it simple reduces failure points and makes evaluation easier</li>
         </ul>
       </div>
     </div>
@@ -413,7 +464,7 @@
     <span class="speaker-badge badge-themno">Thenmozhi Boopathy</span>
     <div class="section-label">Agent Development · Notebook 02</div>
     <h2>Prompt Engineering Journey</h2>
-    <div class="cols" style="max-width:1000px; align-items:flex-start;">
+    <div class="cols" style="max-width:1060px; align-items:flex-start;">
       <div class="col">
         <div class="card" style="border-color:rgba(255,80,80,.3);">
           <h3 style="color:#ff6b6b;">❌ Original Prompt Failures</h3>
@@ -422,14 +473,16 @@
             <li>Tool name mismatch — agent called a tool that didn't exist</li>
             <li>Returned wrong seniority levels without flagging the mismatch</li>
             <li>Presented irrelevant results as if they were correct matches</li>
+            <li>Always called the retriever — even for general knowledge questions</li>
           </ul>
         </div>
       </div>
       <div class="col">
         <div class="card" style="border-color:rgba(63,185,80,.3);">
-          <h3 style="color:#3fb950;">✅ Five Improved Rules</h3>
+          <h3 style="color:#3fb950;">✅ Improved Prompt — Routing + 5 Rules</h3>
           <ul>
-            <li><strong>Rule 1:</strong> Always call the retriever tool before responding</li>
+            <li><strong>Routing:</strong> Classify as job-related or general knowledge before acting — only call the retriever for job queries</li>
+            <li><strong>Rule 1:</strong> Always call the retriever tool for job-related queries</li>
             <li><strong>Rule 2:</strong> Use the user's exact words as the search query</li>
             <li><strong>Rule 3:</strong> Base response only on retrieved documents</li>
             <li><strong>Rule 4:</strong> Verify results match seniority, function &amp; location</li>
@@ -638,8 +691,8 @@
     <div class="section-label">Evaluation · Key Decision</div>
     <h2>Why We Did Not Fine-Tune</h2>
     <div class="cols" style="max-width:960px; align-items:flex-start;">
-      <div class="card col" style="border-color:rgba(255,80,80,.3);">
-        <h3 style="color:#ff6b6b;">Fine-Tuning Would Not Help</h3>
+      <div class="card col" style="border-color:rgba(195,20,45,.4);">
+        <h3 style="color:#c3142d;">❌ Fine-Tuning Would Not Help</h3>
         <ul>
           <li>Fine-tuning changes <em>how</em> a model responds — not <em>what</em> it knows</li>
           <li>Our problem was a data gap: missing job listings, not wrong behavior</li>
@@ -725,9 +778,9 @@
     <h1 style="font-size:2.4rem;">Thank You</h1>
     <p class="subtitle" style="margin-top:8px;">Questions &amp; Discussion</p>
     <div class="team-row" style="margin-top:32px;">
-      <span class="team-chip" style="background:rgba(26,110,181,.3); border-color:rgba(26,110,181,.5);">Seth Grace</span>
-      <span class="team-chip" style="background:rgba(123,47,160,.3); border-color:rgba(123,47,160,.5);">Thenmozhi Boopathy</span>
-      <span class="team-chip" style="background:rgba(26,138,74,.3);  border-color:rgba(26,138,74,.5);">Luke Johnson</span>
+      <span class="team-chip" style="background:rgba(195,20,45,.25); border-color:rgba(195,20,45,.5);">Seth Grace</span>
+      <span class="team-chip" style="background:rgba(139,0,21,.25);  border-color:rgba(139,0,21,.5);">Thenmozhi Boopathy</span>
+      <span class="team-chip" style="background:rgba(232,64,90,.25); border-color:rgba(232,64,90,.5);">Luke Johnson</span>
     </div>
     <div class="cols" style="max-width:800px; margin-top:36px;">
       <div class="card col" style="text-align:center;">
