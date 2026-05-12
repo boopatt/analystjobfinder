@@ -250,10 +250,11 @@ for idx, message in enumerate(st.session_state.messages):
 if not st.session_state.messages:
     st.markdown("**Try asking:**")
     suggestions = [
-        "What New York location jobs are available at Amazon?",
-        "What senior data engineer positions are available at Deloitte?",
-        "Find data engineering jobs that require Python and SQL",
+        "Show me senior data engineering roles at Deloitte",
         "What are the salary ranges for data engineering roles at JPMorgan Chase?",
+        "Find data engineering jobs that require Python and SQL",
+        "What entry-level positions are available?",
+        "What is Python?"
     ]
     cols = st.columns(2)
     for i, suggestion in enumerate(suggestions):
