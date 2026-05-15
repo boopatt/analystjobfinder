@@ -253,10 +253,57 @@
       <span class="team-chip" style="background:rgba(232,64,90,.25);border-color:rgba(232,64,90,.5);">Luke Johnson</span>
     </div>
     <p class="meta" style="margin-top:32px;">Instructor: Dr. Jay Shan &nbsp;·&nbsp; ISA 632 Group Project</p>
-    <div class="slide-num">1 / 16</div>
+    <div class="slide-num">1 / 18</div>
   </div>
 
-  <!-- ═══ 2. AGENDA ═══ -->
+  <!-- ═══ 2. WHAT'S NEW ═══ -->
+  <div class="slide theme-agenda">
+    <div class="section-label">Since the Presentation</div>
+    <h2>Post-Presentation Enhancements &amp; Empirical Findings</h2>
+    <div class="cols" style="max-width:1060px; align-items:flex-start; margin-top:8px;">
+      <div class="col">
+        <div class="card" style="border-color:rgba(195,20,45,.3);">
+          <h3 class="accent">📦 Expanded Knowledge Base</h3>
+          <ul>
+            <li>Injected <strong>2,530 scraped Data Engineer roles</strong> from a CSV dataset on top of the original 37 PDFs</li>
+            <li>Knowledge base now covers a significantly broader range of companies and seniority levels</li>
+            <li>Two-step ingestion: <code>ai_parse_document()</code> for PDFs + Spark transform for CSV</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:rgba(195,20,45,.3);">
+          <h3 class="accent">🌐 Public Deployment</h3>
+          <ul>
+            <li>Deployed to <strong>Streamlit Community Cloud</strong> — publicly accessible, no login needed</li>
+            <li>Live at <strong>analystjobfinder.streamlit.app</strong></li>
+            <li>Connected to GitHub repo — auto-redeploys on every <code>git push</code></li>
+          </ul>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="border-color:rgba(195,20,45,.3);">
+          <h3 class="accent">📊 Re-ran Evaluation</h3>
+          <ul>
+            <li>Safety: <strong>100%</strong> — unchanged</li>
+            <li>Filter Aware: <strong>58% → 67% ↑</strong> — CSV data addressed the entry-level gap</li>
+            <li>Job Relevant: <strong>92% → 50% ↓</strong> — retrieval noise from less-curated CSV rows</li>
+            <li>Relevance to Query: <strong>92% → 67% ↓</strong> — same root cause</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:rgba(195,20,45,.3);">
+          <h3 class="accent">🔁 Real User Feedback</h3>
+          <ul>
+            <li><strong>18 responses rated</strong> — 16 👍 positive (89%), 2 👎 negative</li>
+            <li>Positive: salary query for managerial analyst roles returned accurate ranges across 5 cities — <em>"This is really helpful and reliable."</em></li>
+            <li>Negative: count queries ("How many Deloitte jobs?") unsupported by Vector Search</li>
+            <li>Planned fix: add a <strong>SQL tool</strong> to the agent for aggregation queries</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">2 / 18</div>
+  </div>
+
+  <!-- ═══ 3. AGENDA ═══ -->
   <div class="slide theme-agenda">
     <h2>Agenda</h2>
     <div class="agenda-grid">
@@ -281,16 +328,17 @@
       </div>
       <div class="agenda-card l">
         <div class="who">Luke Johnson</div>
-        <div class="topic">Testing &amp; Evaluation</div>
+        <div class="topic">Evaluation &amp; Feedback Loop</div>
         <ul>
           <li>Evaluation design</li>
           <li>Custom scorers</li>
           <li>Results &amp; findings</li>
-          <li>Recommendations</li>
+          <li>Real user feedback</li>
+          <li>Future roadmap</li>
         </ul>
       </div>
     </div>
-    <div class="slide-num">2 / 16</div>
+    <div class="slide-num">3 / 18</div>
   </div>
 
   <!-- ═══ 3. BUSINESS PROBLEM ═══ -->
@@ -317,7 +365,7 @@
         </ul>
       </div>
     </div>
-    <div class="slide-num">3 / 16</div>
+    <div class="slide-num">4 / 18</div>
   </div>
 
   <!-- ═══ 4. PROJECT SCOPE ═══ -->
@@ -331,8 +379,8 @@
           <h3 class="accent">Target Domain</h3>
           <ul>
             <li>Data engineering &amp; data analyst roles</li>
-            <li>Postings from <strong>Deloitte</strong>, <strong>JPMorgan Chase</strong>, and <strong>Amazon</strong></li>
-            <li>~35 real job listing PDFs covering mid-to-senior level positions</li>
+            <li>37 curated PDFs from <strong>Deloitte</strong>, <strong>JPMorgan Chase</strong>, and <strong>Amazon</strong></li>
+            <li>2,530 scraped Data Engineer roles injected via CSV — expanding coverage across companies and seniority levels</li>
           </ul>
         </div>
         <div class="card">
@@ -359,7 +407,7 @@
         </div>
       </div>
     </div>
-    <div class="slide-num">4 / 16</div>
+    <div class="slide-num">5 / 18</div>
   </div>
 
   <!-- ═══ 5. DATA PREPARATION ═══ -->
@@ -367,23 +415,37 @@
     <span class="speaker-badge badge-seth">Seth Grace</span>
     <div class="section-label">Data Preparation · Notebook 01</div>
     <h2>Building the Knowledge Base</h2>
-    <div class="flow" style="margin-bottom:24px;">
-      <div class="flow-box">📄 Raw Job PDFs<br><small style="opacity:.6">Unity Catalog Volume</small></div>
-      <span class="arrow">→</span>
-      <div class="flow-box">🔍 ai_parse_document()<br><small style="opacity:.6">Extract structured JSON</small></div>
-      <span class="arrow">→</span>
-      <div class="flow-box">🗃️ Delta Table<br><small style="opacity:.6">jobs_knowledge_base</small></div>
-      <span class="arrow">→</span>
-      <div class="flow-box">🔎 Vector Search Index<br><small style="opacity:.6">Semantic retrieval</small></div>
+    <div style="width:100%; max-width:1060px; margin-bottom:20px; display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap;">
+      <!-- Two stacked source paths -->
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="flow-box">📄 37 Job PDFs<br><small style="opacity:.6">Unity Catalog Volume</small></div>
+          <span class="arrow">→</span>
+          <div class="flow-box">🔍 ai_parse_document()<br><small style="opacity:.6">Extract structured text</small></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <div class="flow-box">📊 2,530 CSV Roles<br><small style="opacity:.6">DataEngineer.csv</small></div>
+          <span class="arrow">→</span>
+          <div class="flow-box">🔄 Spark Transform<br><small style="opacity:.6">Concat fields → content</small></div>
+        </div>
+      </div>
+      <!-- Merge arrow -->
+      <span class="arrow" style="font-size:1.6rem;">→</span>
+      <!-- Shared destination -->
+      <div style="display:flex; align-items:center; gap:8px;">
+        <div class="flow-box" style="border-color:rgba(255,160,170,.4);">🗃️ Delta Table<br><small style="opacity:.6">jobs_knowledge_base</small></div>
+        <span class="arrow">→</span>
+        <div class="flow-box">🔎 Vector Search Index<br><small style="opacity:.6">Semantic retrieval</small></div>
+      </div>
     </div>
     <div class="cols" style="max-width:960px;">
       <div class="card col">
         <h3 class="accent">Key Steps</h3>
         <ul>
-          <li>Parse PDFs using Databricks' <code>ai_parse_document()</code> — no custom parsing code needed</li>
-          <li>Flatten document elements into plain text rows</li>
-          <li>Write to Delta table with <strong>Change Data Feed enabled</strong> — required for Vector Search sync</li>
-          <li>Sync and verify the Vector Search index with a sample similarity query</li>
+          <li><strong>Step 5.1:</strong> Parse 37 PDFs with <code>ai_parse_document()</code> — no custom parsing code needed</li>
+          <li><strong>Step 5.2:</strong> Append 2,530 CSV roles via Spark — title, company, location &amp; description concatenated into a single content string</li>
+          <li>Delta table uses <strong>Change Data Feed</strong> — required for Vector Search auto-sync</li>
+          <li>Sync and verify the index with a sample similarity query</li>
         </ul>
       </div>
       <div class="card col">
@@ -396,7 +458,7 @@
         </ul>
       </div>
     </div>
-    <div class="slide-num">5 / 16</div>
+    <div class="slide-num">6 / 18</div>
   </div>
 
   <!-- ═══ 6. ARCHITECTURE ═══ -->
@@ -456,7 +518,7 @@
         </ul>
       </div>
     </div>
-    <div class="slide-num">6 / 16</div>
+    <div class="slide-num">7 / 18</div>
   </div>
 
   <!-- ═══ 7. PROMPT ENGINEERING ═══ -->
@@ -491,7 +553,7 @@
         </div>
       </div>
     </div>
-    <div class="slide-num">7 / 16</div>
+    <div class="slide-num">8 / 18</div>
   </div>
 
   <!-- ═══ 8. MISMATCH FORMAT ═══ -->
@@ -524,7 +586,7 @@
       </div>
     </div>
     <p style="font-size:.88rem; opacity:.6; margin-top:18px;">Honest mismatch reporting prevents the agent from presenting wrong results as correct answers.</p>
-    <div class="slide-num">8 / 16</div>
+    <div class="slide-num">9 / 18</div>
   </div>
 
   <!-- ═══ 9. MODEL REGISTRY & DEPLOYMENT ═══ -->
@@ -555,12 +617,12 @@
       </div>
       <div class="col">
         <div class="card">
-          <h3 class="accent-p">Streamlit Chatbot App</h3>
+          <h3 class="accent-p">Two Deployment Targets</h3>
           <ul>
-            <li>Deployed to Databricks Apps — no separate server needed</li>
-            <li>Suggested prompts guide users on first load</li>
-            <li>Chat history preserved within session</li>
-            <li>Accessible to workspace users with View permission</li>
+            <li><strong>Databricks Apps</strong> — internal; workspace users with View permission</li>
+            <li><strong>Streamlit Community Cloud</strong> — public; anyone with the link via <code>share.streamlit.io</code></li>
+            <li>Streamlit Cloud connects to <strong>github.com/boopatt/analystjobfinder</strong> — any <code>git push</code> to <code>main</code> redeploys automatically</li>
+            <li>Suggested prompts, session chat history, and 👍/👎 feedback on both</li>
           </ul>
         </div>
         <div class="card">
@@ -570,11 +632,12 @@
             <li><strong>Schema:</strong> boopatt</li>
             <li><strong>Endpoint:</strong> agents_…-boopatt-job_finder</li>
             <li><strong>LLM:</strong> Databricks Llama 4 Maverick</li>
+            <li><strong>Public URL:</strong> analystjobfinder.streamlit.app</li>
           </ul>
         </div>
       </div>
     </div>
-    <div class="slide-num">9 / 16</div>
+    <div class="slide-num">10 / 18</div>
   </div>
 
   <!-- ═══ 10. EVALUATION DESIGN ═══ -->
@@ -623,7 +686,7 @@
         </div>
       </div>
     </div>
-    <div class="slide-num">10 / 16</div>
+    <div class="slide-num">11 / 18</div>
   </div>
 
   <!-- ═══ 11. RESULTS ═══ -->
@@ -633,31 +696,31 @@
     <h2>Evaluation Results</h2>
     <div class="stat-row" style="margin-bottom:28px;">
       <div class="stat"><div class="stat-val pass">100%</div><div class="stat-lbl">Safety</div></div>
-      <div class="stat"><div class="stat-val pass">92%</div><div class="stat-lbl">Job Relevant</div></div>
-      <div class="stat"><div class="stat-val pass">92%</div><div class="stat-lbl">Relevance to Query</div></div>
-      <div class="stat"><div class="stat-val warn">58%</div><div class="stat-lbl">Filter Aware</div></div>
+      <div class="stat"><div class="stat-val warn">50%</div><div class="stat-lbl">Job Relevant</div></div>
+      <div class="stat"><div class="stat-val warn">67%</div><div class="stat-lbl">Relevance to Query</div></div>
+      <div class="stat"><div class="stat-val warn">67% ↑</div><div class="stat-lbl">Filter Aware</div></div>
     </div>
     <div class="cols" style="max-width:960px;">
       <div class="card col">
         <h3 class="accent-g">Strengths</h3>
         <ul>
-          <li>Safe across all 12 query types — no harmful content</li>
-          <li>Factual lookups (salary, locations, culture) scored 100%</li>
+          <li>Safety still 100% — no harmful content across all query types</li>
+          <li>Filter Aware improved from 58% → 67% — CSV expansion addressed the entry-level data gap</li>
           <li>MISMATCH FORMAT prevented wrong answers from being presented as correct</li>
           <li>Out-of-scope queries handled gracefully</li>
         </ul>
       </div>
       <div class="card col">
-        <h3 style="color:#e3b341;">Main Bottleneck — Filter Aware 58%</h3>
+        <h3 style="color:#e3b341;">New Bottleneck — Retrieval Precision</h3>
         <ul>
-          <li>5 of 12 questions failed on filter constraints</li>
-          <li>No entry-level or beginner-level postings in the database</li>
-          <li>Multi-criteria filtering (location + level + skill) not supported by pure semantic search</li>
-          <li>Root cause: <strong>data gap</strong>, not a model failure</li>
+          <li>Job Relevant dropped from 92% → 50% — expanded dataset introduced retrieval noise</li>
+          <li>Relevance to Query dropped from 92% → 67% — same root cause</li>
+          <li>2,530 CSV rows are broader but less curated than the 37 PDFs</li>
+          <li>Root cause: <strong>more data without structured filtering</strong> reduces retrieval precision</li>
         </ul>
       </div>
     </div>
-    <div class="slide-num">11 / 16</div>
+    <div class="slide-num">12 / 18</div>
   </div>
 
   <!-- ═══ 12. QUESTION BREAKDOWN ═══ -->
@@ -681,8 +744,8 @@
         </tbody>
       </table>
     </div>
-    <p style="font-size:.85rem; opacity:.55; margin-top:14px;">All 5 filter-aware failures share the same root cause: no junior/entry-level postings exist in the database.</p>
-    <div class="slide-num">12 / 16</div>
+    <p style="font-size:.85rem; opacity:.55; margin-top:14px;">Filter Aware improved 58% → 67% after injecting 2,530 CSV roles. Job Relevant (50%) and Relevance to Query (67%) declined — retrieval noise from less-curated CSV data is the primary driver.</p>
+    <div class="slide-num">13 / 18</div>
   </div>
 
   <!-- ═══ 13. WHY NOT FINE-TUNE ═══ -->
@@ -697,16 +760,16 @@
           <li>Fine-tuning changes <em>how</em> a model responds — not <em>what</em> it knows</li>
           <li>Our problem was a data gap: missing job listings, not wrong behavior</li>
           <li>Job postings change frequently — static weights become stale immediately</li>
-          <li>30 PDFs is far too small for meaningful fine-tuning</li>
+          <li>37 PDFs alone is far too small for meaningful fine-tuning — and even 2,530+ rows is below the threshold for safe SFT</li>
           <li>Llama 4 Maverick would require significant GPU resources to retrain</li>
         </ul>
       </div>
       <div class="card col" style="border-color:rgba(63,185,80,.3);">
         <h3 class="accent-g">The Right Fixes</h3>
         <ul>
-          <li><strong>Expand the dataset</strong> — add entry-level &amp; junior job listings</li>
-          <li><strong>Add metadata fields</strong> — seniority, location, required skills</li>
-          <li><strong>Hybrid search</strong> — combine semantic similarity with structured filters</li>
+          <li><strong>✅ Expanded the dataset</strong> — 2,530 CSV roles improved Filter Aware (58% → 67%) but reduced Job Relevant (92% → 50%) due to retrieval noise</li>
+          <li><strong>Add metadata fields</strong> — seniority, location, required skills to enable structured filtering</li>
+          <li><strong>Hybrid search</strong> — combine semantic similarity with structured filters to handle the noise introduced by a larger, less-curated dataset</li>
           <li><strong>Increase max_tokens</strong> — from 500 to 1000+ to prevent truncation</li>
         </ul>
         <p style="font-size:.83rem; opacity:.65; margin-top:14px; font-style:italic;">
@@ -714,10 +777,59 @@
         </p>
       </div>
     </div>
-    <div class="slide-num">13 / 16</div>
+    <div class="slide-num">14 / 18</div>
   </div>
 
-  <!-- ═══ 14. DEMO ═══ -->
+  <!-- ═══ 14. FEEDBACK LOOP ═══ -->
+  <div class="slide theme-luke">
+    <span class="speaker-badge badge-luke">Luke Johnson</span>
+    <div class="section-label">Feedback Loop · Real-World Signals</div>
+    <h2>User Feedback &amp; Future Roadmap</h2>
+    <!-- Feedback stats -->
+    <div class="stat-row" style="margin-bottom:16px;">
+      <div class="stat"><div class="stat-val" style="color:#1a1a1a;">18</div><div class="stat-lbl">Total Rated</div></div>
+      <div class="stat" style="border-color:rgba(63,185,80,.3);"><div class="stat-val pass">16</div><div class="stat-lbl">👍 Positive</div></div>
+      <div class="stat" style="border-color:rgba(227,179,65,.3);"><div class="stat-val warn">2</div><div class="stat-lbl">👎 Negative</div></div>
+    </div>
+
+    <div class="cols" style="max-width:1020px; align-items:flex-start;">
+      <div class="col">
+        <div class="card" style="border-color:rgba(63,185,80,.3);">
+          <h3 class="accent-g">✅ Positive Example</h3>
+          <p style="font-size:.82rem; color:#555; font-style:italic; margin-bottom:6px;">"Share the salary about the managerial role in Analyst area"</p>
+          <p style="font-size:.82rem; color:#333; line-height:1.6;">Returned salary ranges for 3 roles across 5 cities — Business Analyst III ($147k–$185k in Mountain View), Senior Business Analyst ($118k–$160k in Seattle), Business Analyst (varies by city).</p>
+          <p style="font-size:.8rem; color:#3fb950; margin-top:8px; font-style:italic;">"This is really helpful and reliable." — Accurate &amp; helpful</p>
+        </div>
+        <div class="card" style="border-color:rgba(227,179,65,.3);">
+          <h3 style="color:#e3b341;">⚠️ Negative Example</h3>
+          <p style="font-size:.82rem; color:#555; font-style:italic; margin-bottom:6px;">"How many jobs are there for Deloitte?"</p>
+          <p style="font-size:.82rem; color:#333; line-height:1.6;">Chatbot returned partial top-N results only — could not aggregate a count. Root cause: Vector Search has no aggregation capability.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card" style="border-color:rgba(63,185,80,.3);">
+          <h3 class="accent-g">Planned Fix — SQL Tool</h3>
+          <ul>
+            <li>Add a <strong>SQL Statement Execution</strong> tool alongside the Vector Search retriever</li>
+            <li>Routing prompt classifies "count / how many / list all" → SQL tool; job searches → Vector Search</li>
+            <li>Enables: <code>SELECT COUNT(*) WHERE content LIKE '%Deloitte%'</code></li>
+            <li>No retraining — prompt + tool addition only</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3 class="accent-g">Why This Matters</h3>
+          <ul>
+            <li><strong>89% positive rate</strong> confirms the core RAG approach is working</li>
+            <li>Feedback identified a failure mode our evaluation test set missed</li>
+            <li>The <code>chatbot_feedback</code> table becomes a source of future evaluation test cases</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="slide-num">15 / 18</div>
+  </div>
+
+  <!-- ═══ 15. DEMO ═══ -->
   <div class="slide theme-themno">
     <span class="speaker-badge badge-themno">Thenmozhi Boopathy</span>
     <div class="section-label">Live Demo</div>
@@ -729,7 +841,7 @@
           <li>"Show me senior data engineering roles at Deloitte"</li>
           <li>"What are the salary ranges at JPMorgan Chase for data engineers?"</li>
           <li>"Find roles that require Python and SQL"</li>
-          <li>"What entry-level positions are available?" <span style="opacity:.5; font-size:.8rem;">(mismatch demo)</span></li>
+          <li>"Find remote data engineering roles in New York" <span style="opacity:.5; font-size:.8rem;">(multi-filter demo)</span></li>
         </ul>
       </div>
       <div class="card col">
@@ -739,13 +851,14 @@
           <li>Structured output: title, description, qualifications, salary</li>
           <li>MISMATCH format when criteria can't be met</li>
           <li>Feedback buttons on every response</li>
+          <li>Live at <a href="https://analystjobfinder.streamlit.app/" style="color:#ff8096;">analystjobfinder.streamlit.app</a> — open on any device, no login needed</li>
         </ul>
       </div>
     </div>
-    <div class="slide-num">14 / 16</div>
+    <div class="slide-num">16 / 18</div>
   </div>
 
-  <!-- ═══ 15. LESSONS LEARNED ═══ -->
+  <!-- ═══ 16. LESSONS LEARNED ═══ -->
   <div class="slide theme-agenda">
     <div class="section-label">Reflections</div>
     <h2>Key Lessons Learned</h2>
@@ -769,7 +882,7 @@
         </ul>
       </div>
     </div>
-    <div class="slide-num">15 / 16</div>
+    <div class="slide-num">17 / 18</div>
   </div>
 
   <!-- ═══ 16. THANK YOU ═══ -->
@@ -792,11 +905,22 @@
           <span class="pill">Llama 4 Maverick</span>
           <span class="pill">Vector Search</span>
           <span class="pill">Streamlit</span>
+          <span class="pill">Streamlit Community Cloud</span>
+        </div>
+        <div style="margin-top:18px; display:flex; gap:24px; justify-content:center; flex-wrap:wrap;">
+          <div>
+            <div style="font-size:.75rem; opacity:.45; text-transform:uppercase; letter-spacing:.1em; margin-bottom:4px;">Live App</div>
+            <a href="https://analystjobfinder.streamlit.app/" style="color:#ff8096; font-size:.92rem;">analystjobfinder.streamlit.app</a>
+          </div>
+          <div>
+            <div style="font-size:.75rem; opacity:.45; text-transform:uppercase; letter-spacing:.1em; margin-bottom:4px;">Source Code</div>
+            <a href="https://github.com/boopatt/analystjobfinder" style="color:#ff8096; font-size:.92rem;">github.com/boopatt/analystjobfinder</a>
+          </div>
         </div>
       </div>
     </div>
     <p class="meta" style="margin-top:24px;">Instructor: Dr. Jay Shan &nbsp;·&nbsp; ISA 632 Group Project &nbsp;·&nbsp; Spring 2026</p>
-    <div class="slide-num">16 / 16</div>
+    <div class="slide-num">18 / 18</div>
   </div>
 
 </div><!-- /deck -->
