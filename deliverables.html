@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ISA 632 — Group 8 Project Deliverables</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f7f0f1;
+    color: #1a1a1a;
+    min-height: 100vh;
+    padding: 48px 24px 80px;
+  }
+
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  /* ── Header ── */
+  .header {
+    background: linear-gradient(135deg, #1a0005 0%, #3d0010 60%, #6b0018 100%);
+    color: #fff;
+    border-radius: 16px;
+    padding: 40px 48px;
+    margin-bottom: 36px;
+  }
+  .header .course { font-size: .78rem; font-weight: 700; text-transform: uppercase; letter-spacing: .15em; opacity: .6; margin-bottom: 12px; }
+  .header h1 { font-size: 2rem; font-weight: 700; line-height: 1.2; margin-bottom: 10px; }
+  .header .sub { font-size: 1rem; opacity: .7; margin-bottom: 24px; }
+  .team-row { display: flex; gap: 12px; flex-wrap: wrap; }
+  .chip {
+    background: rgba(255,255,255,.12);
+    border: 1px solid rgba(255,255,255,.22);
+    border-radius: 20px;
+    padding: 5px 16px;
+    font-size: .85rem;
+  }
+  .meta { font-size: .82rem; opacity: .5; margin-top: 20px; }
+
+  /* ── Links bar ── */
+  .links-bar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+  }
+  .link-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border: 1px solid rgba(195,20,45,.3);
+    border-radius: 10px;
+    padding: 12px 20px;
+    text-decoration: none;
+    color: #1a1a1a;
+    font-size: .88rem;
+    font-weight: 600;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .link-btn:hover { border-color: #c3142d; box-shadow: 0 2px 10px rgba(195,20,45,.15); }
+  .link-btn .icon { font-size: 1.1rem; }
+  .link-btn .label { font-size: .72rem; font-weight: 400; opacity: .55; display: block; }
+
+  /* ── Section heading ── */
+  .section-title {
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: #c3142d;
+    margin-bottom: 14px;
+    margin-top: 36px;
+  }
+
+  /* ── Deliverable card ── */
+  .card {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+  .card-num {
+    background: #c3142d;
+    color: #fff;
+    font-size: .75rem;
+    font-weight: 700;
+    border-radius: 8px;
+    padding: 4px 10px;
+    white-space: nowrap;
+    margin-top: 3px;
+    flex-shrink: 0;
+  }
+  .card h2 { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; }
+  .card .req { font-size: .8rem; color: #888; font-style: italic; margin-bottom: 0; }
+
+  .badge {
+    position: absolute;
+    top: 28px;
+    right: 28px;
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding: 4px 12px;
+    border-radius: 20px;
+  }
+  .badge-done { background: #e6f9ed; color: #1a7f3c; border: 1px solid rgba(26,127,60,.2); }
+  .badge-note { background: #fff8e6; color: #8a6200; border: 1px solid rgba(138,98,0,.2); }
+
+  .files {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .file-tag {
+    background: #f5f0f1;
+    border: 1px solid rgba(195,20,45,.15);
+    border-radius: 7px;
+    padding: 4px 12px;
+    font-size: .8rem;
+    font-family: 'Consolas', monospace;
+    color: #c3142d;
+  }
+  .file-tag.link-tag { background: #fff0f2; cursor: pointer; }
+  .file-tag a { color: #c3142d; text-decoration: none; }
+  .file-tag a:hover { text-decoration: underline; }
+
+  ul.details {
+    list-style: none;
+    margin-top: 12px;
+  }
+  ul.details li {
+    font-size: .88rem;
+    color: #444;
+    padding: 4px 0 4px 18px;
+    position: relative;
+    line-height: 1.5;
+  }
+  ul.details li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: #c3142d;
+    opacity: .6;
+  }
+
+  .divider { border: none; border-top: 1px solid rgba(0,0,0,.07); margin: 6px 0 16px; }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    font-size: .78rem;
+    color: #aaa;
+    margin-top: 48px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="course">ISA 632 · Miami University · Spring 2026</div>
+    <h1>💼 Data Analyst Job Finder Chatbot<br>Project Deliverables</h1>
+    <p class="sub">A RAG-based conversational AI for data engineering job search — built on Databricks with LangChain, Llama 4 Maverick, and Vector Search.</p>
+    <div class="team-row">
+      <span class="chip">Seth Grace</span>
+      <span class="chip">Thenmozhi Boopathy</span>
+      <span class="chip">Luke Johnson</span>
+    </div>
+    <p class="meta">Instructor: Dr. Jay Shan &nbsp;·&nbsp; Submitted: May 15th, 2026</p>
+  </div>
+
+  <!-- Quick links -->
+  <div class="links-bar">
+    <a class="link-btn" href="https://analystjobfinder.streamlit.app/" target="_blank">
+      <span class="icon">🌐</span>
+      <span><strong>Live App</strong><span class="label">analystjobfinder.streamlit.app</span></span>
+    </a>
+    <a class="link-btn" href="https://github.com/boopatt/analystjobfinder" target="_blank">
+      <span class="icon">💻</span>
+      <span><strong>GitHub Repository</strong><span class="label">github.com/boopatt/analystjobfinder</span></span>
+    </a>
+    <a class="link-btn" href="presentation.html" target="_blank">
+      <span class="icon">📊</span>
+      <span><strong>Presentation Slides</strong><span class="label">presentation.html · 18 slides</span></span>
+    </a>
+  </div>
+
+  <div class="section-title">Deliverables Checklist</div>
+
+  <!-- 1. Presentation -->
+  <div class="card">
+    <span class="badge badge-done">✓ Complete</span>
+    <div class="card-header">
+      <span class="card-num">01</span>
+      <div>
+        <h2>Presentation Slides</h2>
+        <p class="req">Professional, consultant-style — problem, solution, evidence, demo, and impact</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <ul class="details">
+      <li>18 slides covering business problem, dual-source data ingestion, RAG architecture, prompt engineering, evaluation results (two runs), public deployment, real user feedback, and lessons learned</li>
+      <li>Miami University branding — dark red theme, speaker badges, slide-by-slide navigation</li>
+      <li>Evaluation results from both runs shown with score deltas</li>
+      <li>Feedback loop slide with 18 real user ratings (89% positive) and planned SQL tool fix</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag link-tag"><a href="presentation.html" target="_blank">presentation.html</a></span>
+    </div>
+  </div>
+
+  <!-- 2. Working App -->
+  <div class="card">
+    <span class="badge badge-done">✓ Complete</span>
+    <div class="card-header">
+      <span class="card-num">02</span>
+      <div>
+        <h2>Working Chatbot / App</h2>
+        <p class="req">A runnable prototype or deployed model that can answer realistic user questions</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <ul class="details">
+      <li><strong>Streamlit Community Cloud</strong> — publicly accessible at <a href="https://analystjobfinder.streamlit.app/" target="_blank" style="color:#c3142d;">analystjobfinder.streamlit.app</a> — no login required</li>
+      <li><strong>Databricks Apps</strong> — internal deployment at <a href="https://job-finder-chatbot-7474656346303369.aws.databricksapps.com" target="_blank" style="color:#c3142d;">job-finder-chatbot-7474656346303369.aws.databricksapps.com</a></li>
+      <li>Powered by Databricks Llama 4 Maverick via LangChain RAG agent and Vector Search index over 37 PDFs + 2,530 CSV roles</li>
+      <li>Structured output format (title, company, description, qualifications, salary) with MISMATCH handling</li>
+      <li>👍 / 👎 feedback on every response — 18 ratings collected (16 positive)</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag link-tag"><a href="chatbot_app/app.py" target="_blank">chatbot_app/app.py</a></span>
+      <span class="file-tag">agent.py</span>
+      <span class="file-tag">chatbot_app/app.yaml</span>
+      <span class="file-tag">chatbot_app/requirements.txt</span>
+    </div>
+  </div>
+
+  <!-- 3. Technical Document -->
+  <div class="card">
+    <span class="badge badge-done">✓ Complete</span>
+    <div class="card-header">
+      <span class="card-num">03</span>
+      <div>
+        <h2>Technical Document</h2>
+        <p class="req">Brief explanation of data collection, preprocessing, vector store, prompt, model pipeline, evaluation, deployment, and limitations</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <ul class="details">
+      <li>Covers all 8 required sections: Data Collection, Preprocessing, Vector Store, Prompt, Model Pipeline, Evaluation, Deployment, and Limitations</li>
+      <li>Documents both evaluation runs with before/after score comparison</li>
+      <li>Deployment section covers both Databricks Apps and Streamlit Community Cloud</li>
+      <li>Three limitations identified: retrieval noise from CSV, count query gap (with SQL tool fix), and token truncation</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">Technical Document - ISA Group 8.txt</span>
+    </div>
+  </div>
+
+  <!-- 4. Companion Files -->
+  <div class="card">
+    <span class="badge badge-done">✓ Complete</span>
+    <div class="card-header">
+      <span class="card-num">04</span>
+      <div>
+        <h2>Companion Files</h2>
+        <p class="req">Notebooks, scripts, data samples, prompt files, evaluation files, and setup instructions needed to replicate the work</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <ul class="details">
+      <li><strong>01_DataPreparation.ipynb</strong> — Ingest PDFs + CSV into Delta table, sync Vector Search index</li>
+      <li><strong>02_AgentDevelopment.ipynb</strong> — Build agent, document prompt engineering journey, register and deploy via MLflow</li>
+      <li><strong>03_Evaluation.ipynb</strong> — Run MLflow evaluation with 4 scorers (Safety, Job Relevant, Relevance to Query, Filter Aware)</li>
+      <li><strong>04_ChatbotDeployment.ipynb</strong> — Verify endpoint, create feedback table, deploy to Databricks Apps and Streamlit Cloud</li>
+      <li><strong>agent.py</strong> — Core LangChain RAG agent with routing prompt and VectorSearchRetrieverTool</li>
+      <li><strong>eval_data.jsonl</strong> — 12 evaluation questions with expected scorer criteria</li>
+      <li><strong>ChatTesting.md / ChatTestingInference.md</strong> — Pre- and post-prompt engineering test notes</li>
+      <li><strong>README.md</strong> — Full setup instructions, architecture, resource table, and known limitations</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag">01_DataPreparation.ipynb</span>
+      <span class="file-tag">02_AgentDevelopment.ipynb</span>
+      <span class="file-tag">03_Evaluation.ipynb</span>
+      <span class="file-tag">04_ChatbotDeployment.ipynb</span>
+      <span class="file-tag">agent.py</span>
+      <span class="file-tag">eval_data.jsonl</span>
+      <span class="file-tag">ChatTesting.md</span>
+      <span class="file-tag">ChatTestingInference.md</span>
+      <span class="file-tag link-tag"><a href="README.md" target="_blank">README.md</a></span>
+    </div>
+  </div>
+
+  <!-- 5. Demo Backup -->
+  <div class="card">
+    <span class="badge badge-note">⚠ Attach</span>
+    <div class="card-header">
+      <span class="card-num">05</span>
+      <div>
+        <h2>Demo Backup</h2>
+        <p class="req">Recorded video or screenshots in case the live app is unstable during presentation</p>
+      </div>
+    </div>
+    <hr class="divider">
+    <ul class="details">
+      <li>The live app is publicly accessible at <a href="https://analystjobfinder.streamlit.app/" target="_blank" style="color:#c3142d;">analystjobfinder.streamlit.app</a> and does not require a Databricks login — reducing the risk of auth failures during the demo</li>
+      <li>Attach a screen recording or screenshots of the chatbot answering the demo queries from slide 15 as a backup</li>
+      <li>Recommended queries to capture: salary lookup (managerial analyst roles), Deloitte senior DE roles, multi-filter search (remote + New York)</li>
+    </ul>
+    <div class="files">
+      <span class="file-tag" style="opacity:.5;">demo-recording.mp4 &nbsp;— attach here</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    ISA 632 Group Project · Miami University · Spring 2026 &nbsp;·&nbsp;
+    <a href="https://github.com/boopatt/analystjobfinder" target="_blank" style="color:#c3142d;">github.com/boopatt/analystjobfinder</a>
+  </div>
+
+</div>
+</body>
+</html>
