@@ -286,14 +286,13 @@
     </div>
     <hr class="divider">
     <ul class="details">
-      <li><strong>01_DataPreparation.ipynb</strong> — Ingest PDFs + CSV into Delta table, sync Vector Search index</li>
-      <li><strong>02_AgentDevelopment.ipynb</strong> — Build agent, document prompt engineering journey, register and deploy via MLflow</li>
-      <li><strong>03_Evaluation.ipynb</strong> — Run MLflow evaluation with 4 scorers (Safety, Job Relevant, Relevance to Query, Filter Aware)</li>
-      <li><strong>04_ChatbotDeployment.ipynb</strong> — Verify endpoint, create feedback table, deploy to Databricks Apps and Streamlit Cloud</li>
+      <li><strong>Notebooks</strong> — 01 Data Preparation, 02 Agent Development, 03 Evaluation, 04 Chatbot Deployment</li>
       <li><strong>agent.py</strong> — Core LangChain RAG agent with routing prompt and VectorSearchRetrieverTool</li>
       <li><strong>eval_data.jsonl</strong> — 12 evaluation questions with expected scorer criteria</li>
       <li><strong>ChatTesting.md / ChatTestingInference.md</strong> — Pre- and post-prompt engineering test notes</li>
       <li><strong>README.md</strong> — Full setup instructions, architecture, resource table, and known limitations</li>
+      <li><strong>SourceData/</strong> — 26 source job listing PDFs (Amazon, Deloitte, JPMorgan Chase) + DataEngineer.csv (2,530 scraped roles)</li>
+      <li><strong>Refs/</strong> — Prompt engineering notes (Seth &amp; Thenmozhi, Luke), project flow document, and course reference PDFs</li>
     </ul>
     <div class="files">
       <span class="file-tag">01_DataPreparation.ipynb</span>
@@ -305,12 +304,14 @@
       <span class="file-tag">ChatTesting.md</span>
       <span class="file-tag">ChatTestingInference.md</span>
       <span class="file-tag link-tag"><a href="README.md" target="_blank">README.md</a></span>
+      <span class="file-tag">SourceData/ (26 PDFs + DataEngineer.csv)</span>
+      <span class="file-tag">Refs/ (prompts + project flow)</span>
     </div>
   </div>
 
   <!-- 5. Demo Backup -->
   <div class="card">
-    <span class="badge badge-note">⚠ Attach</span>
+    <span class="badge badge-done">✓ Complete</span>
     <div class="card-header">
       <span class="card-num">05</span>
       <div>
@@ -320,12 +321,13 @@
     </div>
     <hr class="divider">
     <ul class="details">
-      <li>The live app is publicly accessible at <a href="https://analystjobfinder.streamlit.app/" target="_blank" style="color:#c3142d;">analystjobfinder.streamlit.app</a> and does not require a Databricks login — reducing the risk of auth failures during the demo</li>
-      <li>Attach a screen recording or screenshots of the chatbot answering the demo queries from slide 15 as a backup</li>
-      <li>Recommended queries to capture: salary lookup (managerial analyst roles), Deloitte senior DE roles, multi-filter search (remote + New York)</li>
+      <li><strong>Chatbot Demo Recording.mp4</strong> — full walkthrough of the live chatbot answering realistic user queries</li>
+      <li><strong>Thenmozhi Chatbot Feedback Audio.mp4</strong> — audio recording covering the feedback collection flow and user interaction</li>
+      <li>The live app is also publicly accessible at <a href="https://analystjobfinder.streamlit.app/" target="_blank" style="color:#c3142d;">analystjobfinder.streamlit.app</a> — no Databricks login required, reducing live demo risk</li>
     </ul>
     <div class="files">
-      <span class="file-tag" style="opacity:.5;">demo-recording.mp4 &nbsp;— attach here</span>
+      <span class="file-tag">DemoRecording/Chatbot Demo Recording.mp4</span>
+      <span class="file-tag">DemoRecording/Thenmozhi Chatbot Feedback Audio.mp4</span>
     </div>
   </div>
 
