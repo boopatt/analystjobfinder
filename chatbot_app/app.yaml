@@ -14,8 +14,6 @@ command:
 env:
   - name: DATABRICKS_HOST
     value: "https://dbc-0726d26f-3749.cloud.databricks.com"
-  - name: DATABRICKS_TOKEN
-    value: "dapic3c19a92e913f58118665385fef60434"
   - name: ENDPOINT_NAME
     value: "agents_boopatt-job_finder"
   - name: SQL_WAREHOUSE_ID
